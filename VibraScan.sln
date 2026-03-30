@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37027.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B65A3482-8E77-4BDD-A338-CE00E4E61EBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibraScan.Domain", "src\VibraScan.Domain\VibraScan.Domain.csproj", "{F7929DF1-E5E5-481C-81C6-6940C0E683C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibraScan.Domain.UnitTests", "tests\VibraScan.Domain.UnitTests\VibraScan.Domain.UnitTests.csproj", "{36023813-71E6-4BCE-8DFB-3048F2A66CD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibraScan.Application", "src\VibraScan.Application\VibraScan.Application.csproj", "{FFCF42EF-7403-4CC2-B644-7CDE79F4B02D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibraScan.Infrastructure", "src\VibraScan.Infrastructure\VibraScan.Infrastructure.csproj", "{FE8EA0A8-F89E-4194-9762-75B6A2CD8075}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{0C3AAF03-A3E7-46C6-8FA9-9E6A3A7529B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VibraScan.WinForms", "src\Presentation\VibraScan.WinForms\VibraScan.WinForms.csproj", "{767DC8B8-EABB-4B2B-B93C-C3CDEFEDBF0A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7929DF1-E5E5-481C-81C6-6940C0E683C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7929DF1-E5E5-481C-81C6-6940C0E683C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7929DF1-E5E5-481C-81C6-6940C0E683C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7929DF1-E5E5-481C-81C6-6940C0E683C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36023813-71E6-4BCE-8DFB-3048F2A66CD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36023813-71E6-4BCE-8DFB-3048F2A66CD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36023813-71E6-4BCE-8DFB-3048F2A66CD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36023813-71E6-4BCE-8DFB-3048F2A66CD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFCF42EF-7403-4CC2-B644-7CDE79F4B02D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFCF42EF-7403-4CC2-B644-7CDE79F4B02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFCF42EF-7403-4CC2-B644-7CDE79F4B02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFCF42EF-7403-4CC2-B644-7CDE79F4B02D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE8EA0A8-F89E-4194-9762-75B6A2CD8075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE8EA0A8-F89E-4194-9762-75B6A2CD8075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE8EA0A8-F89E-4194-9762-75B6A2CD8075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE8EA0A8-F89E-4194-9762-75B6A2CD8075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{767DC8B8-EABB-4B2B-B93C-C3CDEFEDBF0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{767DC8B8-EABB-4B2B-B93C-C3CDEFEDBF0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{767DC8B8-EABB-4B2B-B93C-C3CDEFEDBF0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{767DC8B8-EABB-4B2B-B93C-C3CDEFEDBF0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F7929DF1-E5E5-481C-81C6-6940C0E683C1} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{36023813-71E6-4BCE-8DFB-3048F2A66CD5} = {B65A3482-8E77-4BDD-A338-CE00E4E61EBA}
+		{FFCF42EF-7403-4CC2-B644-7CDE79F4B02D} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{FE8EA0A8-F89E-4194-9762-75B6A2CD8075} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{0C3AAF03-A3E7-46C6-8FA9-9E6A3A7529B5} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{767DC8B8-EABB-4B2B-B93C-C3CDEFEDBF0A} = {0C3AAF03-A3E7-46C6-8FA9-9E6A3A7529B5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A98BA05C-FA50-4833-9CE0-8F9A10B6DAA8}
+	EndGlobalSection
+EndGlobal
