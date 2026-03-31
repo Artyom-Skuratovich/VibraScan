@@ -6,6 +6,8 @@
 
         event EventHandler? ViewClosed;
 
+        bool IsDisposed { get; }
+
         void Show();
 
         void Close();

@@ -21,6 +21,7 @@ namespace VibraScan.WinForms.Presenters
             _files = files;
 
             _view.ViewLoaded += OnViewLoaded;
+            _view.ViewClosed += OnViewClosed;
             _view.CancelRequested += OnCancelRequested;
         }
 
@@ -89,9 +90,19 @@ namespace VibraScan.WinForms.Presenters
             }
         }
 
+        private void OnViewClosed(object? sender, EventArgs e)
+        {
+            _cts?.Cancel();
+
+            _view.CancelRequested -= OnCancelRequested;
+            _view.ViewClosed -= OnViewClosed;
+            _view.ViewLoaded -= OnViewLoaded;
+        }
+
         private void OnCancelRequested(object? sender, EventArgs e)
         {
             _cts?.Cancel();
+            _view.SetCancelable(false);
         }
     }
 }

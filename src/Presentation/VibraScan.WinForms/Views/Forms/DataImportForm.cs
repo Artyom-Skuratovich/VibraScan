@@ -12,6 +12,8 @@ namespace VibraScan.WinForms.Views.Forms
         public DataImportForm()
         {
             InitializeComponent();
+
+            btnCancel.Click += (s, e) => CancelRequested?.Invoke(this, EventArgs.Empty);
         }
 
         public event EventHandler? CancelRequested;

@@ -5,7 +5,7 @@ namespace VibraScan.WinForms.Views.Forms.Base
 {
     public partial class BaseView : Form, IView
     {
-        public BaseView()
+        protected BaseView()
         {
             InitializeComponent();
         }
@@ -27,22 +27,30 @@ namespace VibraScan.WinForms.Views.Forms.Base
 
                 if (ex != null)
                 {
-                    var details = new StringBuilder();
+                    var errorDetails = new StringBuilder();
+                    var currentEx = ex;
+                    int depth = 0;
 
-                    details.AppendLine($"Тип: {ex.GetType().Name}");
-                    details.AppendLine($"Сообщение: {ex.Message}");
-
-                    if (ex.InnerException != null)
+                    while (currentEx != null)
                     {
-                        details.AppendLine($"Внутренняя ошибка: {ex.InnerException.Message}");
+                        var prefix = depth == 0 ? "Ошибка" : $"Внутренняя ({depth})";
+                        errorDetails.AppendLine($"[{prefix}]: {currentEx.GetType().Name}");
+                        errorDetails.AppendLine(currentEx.Message);
+                        errorDetails.AppendLine();
+
+                        currentEx = currentEx.InnerException;
+                        depth++;
                     }
 
-                    details.AppendLine("\n[StackTrace]");
-                    details.AppendLine(ex.StackTrace);
+                    if (!string.IsNullOrEmpty(ex.StackTrace))
+                    {
+                        errorDetails.AppendLine("[StackTrace]");
+                        errorDetails.AppendLine(ex.StackTrace);
+                    }
 
                     page.Expander = new TaskDialogExpander()
                     {
-                        Text = details.ToString(),
+                        Text = errorDetails.ToString(),
                         CollapsedButtonText = "Показать подробности",
                         ExpandedButtonText = "Скрыть подробности"
                     };
@@ -60,6 +68,18 @@ namespace VibraScan.WinForms.Views.Forms.Base
             if (result == DialogResult.Cancel) return false;
 
             return null;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            ViewLoaded?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            base.OnFormClosed(e);
+            ViewClosed?.Invoke(this, EventArgs.Empty);
         }
 
         protected void InvokeIfNeeded(Action action)
