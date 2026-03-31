@@ -17,6 +17,7 @@ namespace VibraScan.Infrastructure.DataImport.StartImport
             {
                 using var reader = XmlReader.Create(stream, new XmlReaderSettings
                 {
+                    CloseInput = false,
                     Async = true,
                     IgnoreComments = true,
                     IgnoreWhitespace = true
