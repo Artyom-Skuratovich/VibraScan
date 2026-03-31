@@ -26,7 +26,7 @@ namespace VibraScan.WinForms.Presenters
 
         public void Run()
         {
-            throw new NotImplementedException();
+            _view.ShowModal();
         }
 
         private async void OnViewLoaded(object? sender, EventArgs e)
@@ -40,19 +40,15 @@ namespace VibraScan.WinForms.Presenters
                 {
                     openedStreams.Add(File.OpenRead(file));
                 }
-                var isBulk = _files.Length > 1;
 
-                var segmentProgress = new Progress<ImportProgress>(p =>
-                {
-                    // TODO: настройка _view.
-                });
+                _view.PrepareForImport(_files.Length);
+                _view.SetCancelable(true);
 
-                if (isBulk)
+                var segmentProgress = new Progress<ImportProgress>(p => _view.UpdateFileProgress(p.Percentage, p.CurrentStage));
+
+                if (_files.Length > 1)
                 {
-                    var overallProgress = new Progress<BulkImportProgress>(p =>
-                    {
-                        // TODO: настройка _view.
-                    });
+                    var overallProgress = new Progress<BulkImportProgress>(p => _view.UpdateOverallProgress(p.CurrentIndex, p.Description));
 
                     var command = new StartBulkImportCommand
                     {
@@ -61,8 +57,7 @@ namespace VibraScan.WinForms.Presenters
                         OverallProgress = overallProgress
                     };
 
-                    var result = await _dispatcher.SendAsync(command, _cts.Token);
-                    // TODO: обработка результата.
+                    _view.ShowResults(await _dispatcher.SendAsync(command, _cts.Token));
                 }
                 else
                 {
@@ -72,17 +67,21 @@ namespace VibraScan.WinForms.Presenters
                         Progress = segmentProgress
                     };
 
-                    var result = await _dispatcher.SendAsync(command, _cts.Token);
-                    // TODO: обработка результата.
+                    _view.ShowResults(await _dispatcher.SendAsync(command, _cts.Token));
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO: обработка ошибки.
+                _view.ShowError($"Ошибка импорта", "Непредвиденная ошибка", ex);
             }
             finally
             {
-                openedStreams.ForEach(s => s?.Dispose());
+                _view.SetCancelable(false);
+
+                foreach (var stream in openedStreams)
+                {
+                    stream?.Dispose();
+                }
                 openedStreams.Clear();
 
                 _cts?.Dispose();
