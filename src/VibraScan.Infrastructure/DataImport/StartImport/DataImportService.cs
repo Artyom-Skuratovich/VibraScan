@@ -7,15 +7,15 @@ namespace VibraScan.Infrastructure.DataImport.StartImport
     {
         private readonly Dictionary<string, IEntityProcessor> _processors = processors.ToDictionary(p => p.EntityName);
 
-        public async Task<ImportResult> ImportAsync(Stream stream, IProgress<ImportProgress> progress, CancellationToken ct = default)
+        public async Task<ImportResult> ImportAsync(ImportSource source, IProgress<ImportProgress> progress, CancellationToken ct = default)
         {
             var entCount = new[] { 0 };
-            var collCount = 0D;
+            var collCount = 0d;
             var context = new ImportContext();
 
             try
             {
-                using var reader = XmlReader.Create(stream, new XmlReaderSettings
+                using var reader = XmlReader.Create(source.Data, new XmlReaderSettings
                 {
                     CloseInput = false,
                     Async = true,
@@ -42,23 +42,23 @@ namespace VibraScan.Infrastructure.DataImport.StartImport
                 }
                 progress.Report(new ImportProgress(100, "Импорт успешно завершён"));
 
-                return ImportResult.Success(entCount[0]);
+                return ImportResult.Success(entCount[0], source.Name);
             }
             catch (XmlException ex)
             {
-                return ImportResult.Failure("Ошибка структуры XML", ex.Message, ImportErrorType.Parsing, entCount[0]);
+                return ImportResult.Failure("Ошибка структуры XML", ex.Message, ImportErrorType.Parsing, entCount[0], source.Name);
             }
             catch (OperationCanceledException)
             {
-                return ImportResult.Failure("Импорт отменён", "Операция прервана пользователем", ImportErrorType.Canceled, entCount[0]);
+                return ImportResult.Failure("Импорт отменён", "Операция прервана пользователем", ImportErrorType.Canceled, entCount[0], source.Name);
             }
             catch (ImportInconsistencyException ex)
             {
-                return ImportResult.Failure("Конфликт данных", ex.Message, ImportErrorType.Inconsistency, entCount[0]);
+                return ImportResult.Failure("Конфликт данных", ex.Message, ImportErrorType.Inconsistency, entCount[0], source.Name);
             }
             catch (Exception ex)
             {
-                return ImportResult.Failure("Критическая ошибка", ex.Message, ImportErrorType.Fatal, entCount[0], ex.StackTrace);
+                return ImportResult.Failure("Критическая ошибка", ex.Message, ImportErrorType.Fatal, entCount[0], source.Name, ex.StackTrace);
             }
         }
 

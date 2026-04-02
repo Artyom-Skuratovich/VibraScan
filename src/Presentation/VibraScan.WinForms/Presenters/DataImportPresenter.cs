@@ -33,13 +33,13 @@ namespace VibraScan.WinForms.Presenters
         private async void OnViewLoaded(object? sender, EventArgs e)
         {
             _cts = new CancellationTokenSource();
-            var openedStreams = new List<Stream>(_files.Length);
+            var sources = new List<ImportSource>(_files.Length);
 
             try
             {
                 foreach (var file in _files)
                 {
-                    openedStreams.Add(File.OpenRead(file));
+                    sources.Add(new ImportSource(Path.GetFileName(file), File.OpenRead(file)));
                 }
 
                 _view.PrepareForImport(_files.Length);
@@ -53,7 +53,7 @@ namespace VibraScan.WinForms.Presenters
 
                     var command = new StartBulkImportCommand
                     {
-                        DataStreams = openedStreams,
+                        Sources = sources,
                         SegmentProgress = segmentProgress,
                         OverallProgress = overallProgress
                     };
@@ -64,7 +64,7 @@ namespace VibraScan.WinForms.Presenters
                 {
                     var command = new StartImportCommand
                     {
-                        DataStream = openedStreams[0],
+                        Source = sources[0],
                         Progress = segmentProgress
                     };
 
@@ -79,11 +79,11 @@ namespace VibraScan.WinForms.Presenters
             {
                 _view.SetCancelable(false);
 
-                foreach (var stream in openedStreams)
+                foreach (var src in sources)
                 {
-                    stream?.Dispose();
+                    src.Data?.Dispose();
                 }
-                openedStreams.Clear();
+                sources.Clear();
 
                 _cts?.Dispose();
                 _cts = null;

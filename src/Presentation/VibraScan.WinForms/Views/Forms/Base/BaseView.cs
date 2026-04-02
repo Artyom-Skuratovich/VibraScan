@@ -5,13 +5,13 @@ namespace VibraScan.WinForms.Views.Forms.Base
 {
     public partial class BaseView : Form, IView
     {
+        public event EventHandler? ViewLoaded;
+        public event EventHandler? ViewClosed;
+
         protected BaseView()
         {
             InitializeComponent();
         }
-
-        public event EventHandler? ViewLoaded;
-        public event EventHandler? ViewClosed;
 
         public virtual void ShowError(string message, string title, Exception? ex = null)
         {

@@ -2,6 +2,6 @@
 {
     public interface IDataImportService
     {
-        Task<ImportResult> ImportAsync(Stream stream, IProgress<ImportProgress> progress, CancellationToken ct = default);
+        Task<ImportResult> ImportAsync(ImportSource source, IProgress<ImportProgress> progress, CancellationToken ct = default);
     }
 }

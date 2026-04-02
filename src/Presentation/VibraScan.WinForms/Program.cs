@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using VibraScan.WinForms.Views.Forms;
 
 namespace VibraScan.WinForms
@@ -9,6 +10,11 @@ namespace VibraScan.WinForms
         {
             ApplicationConfiguration.Initialize();
             System.Windows.Forms.Application.Run(new DataImportForm());
+        }
+
+        private static void ConfigureServices(this IServiceCollection services)
+        {
+
         }
     }
 }

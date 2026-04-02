@@ -16,7 +16,7 @@ namespace VibraScan.Application.DataImport.Commands.StartImport
             {
                 await _context.BeginTransactionAsync(ct);
 
-                var result = await _service.ImportAsync(request.DataStream, request.Progress, ct);
+                var result = await _service.ImportAsync(request.Source, request.Progress, ct);
                 processedEntitiesCount = result.ProcessedEntitiesCount;
 
                 if (result.IsSuccess)
@@ -32,7 +32,7 @@ namespace VibraScan.Application.DataImport.Commands.StartImport
             }
             catch (Exception ex)
             {
-                return ImportResult.Failure("Сбой транзакции при импорте данных", ex.Message, ImportErrorType.Fatal, processedEntitiesCount, ex.StackTrace);
+                return ImportResult.Failure("Сбой транзакции при импорте данных", ex.Message, ImportErrorType.Fatal, processedEntitiesCount, request.Source.Name, ex.StackTrace);
             }
         }
     }

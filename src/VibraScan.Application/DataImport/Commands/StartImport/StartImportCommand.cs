@@ -4,7 +4,7 @@ namespace VibraScan.Application.DataImport.Commands.StartImport
 {
     public record StartImportCommand : IRequest<ImportResult>
     {
-        public Stream DataStream { get; init; } = null!;
+        public ImportSource Source { get; init; }
 
         public IProgress<ImportProgress> Progress { get; init; } = null!;
     }
