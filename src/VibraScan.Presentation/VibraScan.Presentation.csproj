@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VibraScan.Application\VibraScan.Application.csproj" />
-    <ProjectReference Include="..\..\VibraScan.Domain\VibraScan.Domain.csproj" />
-    <ProjectReference Include="..\..\VibraScan.Infrastructure\VibraScan.Infrastructure.csproj" />
+    <ProjectReference Include="..\VibraScan.Application\VibraScan.Application.csproj" />
+    <ProjectReference Include="..\VibraScan.Domain\VibraScan.Domain.csproj" />
+    <ProjectReference Include="..\VibraScan.Infrastructure\VibraScan.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

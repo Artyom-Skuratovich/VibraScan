@@ -22,20 +22,21 @@
 
         public ImportError? Error { get; init; }
 
-        public static ImportResult Success(int count, string sourceName)
+        public static ImportResult Success(int count, string sourceName) => new()
         {
-            return new ImportResult
-            {
-                IsSuccess = true,
-                Message = "Импорт успешно завершён",
-                ProcessedEntitiesCount = count,
-                SourceName = sourceName
-            };
-        }
+            IsSuccess = true,
+            Message = "Импорт успешно завершён",
+            ProcessedEntitiesCount = count,
+            SourceName = sourceName
+        };
 
-        public static ImportResult Failure(string summary, string detail, ImportErrorType errorType, int processedBeforeError, string sourceName, string? stackTrace = null)
-        {
-            return new ImportResult
+        public static ImportResult Failure(
+            string summary,
+            string detail,
+            ImportErrorType errorType,
+            int processedBeforeError,
+            string sourceName,
+            string? stackTrace = null) => new()
             {
                 IsSuccess = false,
                 Message = summary,
@@ -43,6 +44,5 @@
                 Error = new ImportError(detail, errorType, stackTrace),
                 SourceName = sourceName
             };
-        }
     }
 }
