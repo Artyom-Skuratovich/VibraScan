@@ -31,8 +31,8 @@ namespace VibraScan.Presentation.ViewModels
             {
                 await _migrationRunner(ct);
 
-                _windowService.Show<MainViewModel>();
                 _windowService.Close(this);
+                _windowService.Show<MainViewModel>();
             }
             catch (OperationCanceledException)
             {
