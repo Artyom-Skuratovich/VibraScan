@@ -8,6 +8,8 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Margin" Value="0,2,0,0"/>
+        <Setter Property="RenderOptions.EdgeMode" Value="Unspecified" />
+        <Setter Property="SnapsToDevicePixels" Value="False" />
     </Style>
 
     <Style x:Key="SpinnerOrbitStyle" TargetType="Grid">
