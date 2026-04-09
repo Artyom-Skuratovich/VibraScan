@@ -4,9 +4,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VibraScan.Presentation.Views.Windows"
+        xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
         mc:Ignorable="d"
-        Title="MigrationWindow" Height="450" Width="800">
-    <Grid>
+        d:DataContext="{d:DesignInstance Type=vm:MigrationViewModel, IsDesignTimeCreatable=False}"
+        Title="{Binding Title, FallbackValue='Подготовка базы данных'}"
+        ResizeMode="NoResize"
+        SizeToContent="Manual"
+        Height="300" Width="400"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/Styles/LoadingSpinnerStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Control Template="{StaticResource SpinnerTemplate}" Margin="0,0,0,30"/>
+
+            <TextBlock Text="{Binding StatusText, FallbackValue='Выполняются миграции...'}" 
+                       Foreground="Black" 
+                       FontSize="16" 
+                       FontWeight="Light" 
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,15"/>
+
+            <TextBlock Text="Пожалуйста, подождите. Это может занять несколько минут" 
+                       Foreground="#888888" 
+                       HorizontalAlignment="Center" 
+                       TextAlignment="Center"/>
+        </StackPanel>
     </Grid>
 </Window>

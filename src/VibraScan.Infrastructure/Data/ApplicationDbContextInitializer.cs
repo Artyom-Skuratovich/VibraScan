@@ -7,13 +7,13 @@ namespace VibraScan.Infrastructure.Data
 {
     public static class InitializerExtensions
     {
-        public static async Task InitializeDatabaseAsync(this IServiceScopeFactory scopeFactory)
+        public static async Task InitializeDatabaseAsync(this IServiceScopeFactory scopeFactory, CancellationToken ct)
         {
             using var scope = scopeFactory.CreateScope();
             var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
 
-            await initializer.InitializeAsync();
-            await initializer.SeedAsync();
+            await initializer.InitializeAsync(ct);
+            await initializer.SeedAsync(ct);
         }
     }
 
@@ -21,16 +21,16 @@ namespace VibraScan.Infrastructure.Data
     {
         private readonly ApplicationDbContext _context = context;
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync(CancellationToken ct)
         {
-            await _context.Database.EnsureCreatedAsync();
+            await _context.Database.MigrateAsync(ct);
         }
 
-        public async Task SeedAsync()
+        public async Task SeedAsync(CancellationToken ct)
         {
             var defaultRule = await _context.InspectionRules
                 .Include(r => r.Intervals)
-                .FirstOrDefaultAsync(r => r.Name == InspectionRule.DefaultName);
+                .FirstOrDefaultAsync(r => r.Name == InspectionRule.DefaultName, ct);
 
             if (defaultRule == null)
             {
@@ -66,7 +66,7 @@ namespace VibraScan.Infrastructure.Data
                 }
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(ct);
         }
 
         private static List<InspectionInterval> GetDefaultIntervals()

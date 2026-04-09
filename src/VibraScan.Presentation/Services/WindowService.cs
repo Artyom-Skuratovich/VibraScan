@@ -12,9 +12,9 @@ namespace VibraScan.Presentation.Services
         private readonly Dictionary<Type, Type> _mappings = [];
         private readonly Dictionary<object, (Window Window, IServiceScope Scope)> _openWindows = [];
 
-        public void Register<TViewModel, TWindow>() where TViewModel : class where TWindow : Window
+        public void Register<TVm, TWin>() where TVm : class where TWin : Window
         {
-            _mappings[typeof(TViewModel)] = typeof(TWindow);
+            _mappings[typeof(TVm)] = typeof(TWin);
         }
 
         public void Close(object model)
