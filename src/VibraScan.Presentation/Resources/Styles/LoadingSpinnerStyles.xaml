@@ -27,7 +27,7 @@
         </ControlTemplate.Resources>
 
         <Viewbox Width="100" Height="100">
-            <Canvas Width="100" Height="100">
+            <Canvas Width="100" Height="100" CacheMode="BitmapCache">
 
                 <!--Каждый кружок обёрнут в Grid, который занимает весь Canvas.
                 Мы будем вращать эти Grid-ы с разной скоростью/задержкой.-->
@@ -69,7 +69,7 @@
             <Trigger Property="IsVisible" Value="True">
                 <Trigger.EnterActions>
                     <BeginStoryboard x:Name="SpinBegin">
-                        <Storyboard RepeatBehavior="Forever">
+                        <Storyboard RepeatBehavior="Forever" Timeline.DesiredFrameRate="30">
                             <DoubleAnimation Storyboard.TargetName="C1" Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)"
                                              From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.0">
                                 <DoubleAnimation.EasingFunction>

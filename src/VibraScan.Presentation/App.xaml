@@ -2,9 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:VibraScan.Presentation"
-             ShutdownMode="OnExplicitShutdown"
              StartupUri="Views/Windows/MigrationWindow.xaml">
     <Application.Resources>
-
+        <!--ShutdownMode="OnExplicitShutdown"-->
     </Application.Resources>
 </Application>
