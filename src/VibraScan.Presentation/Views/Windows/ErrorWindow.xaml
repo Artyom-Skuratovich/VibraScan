@@ -1,0 +1,134 @@
+﻿<Window x:Class="VibraScan.Presentation.Views.Windows.ErrorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VibraScan.Presentation.Views.Windows"
+        xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:ErrorViewModel, IsDesignTimeCreatable=False}"
+        Title="{Binding Title}"
+        Height="Auto" 
+        Width="450"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="#F3F3F3"
+        MinWidth="400"
+        MaxWidth="600">
+    <Grid>
+        <Border Padding="24">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Bottom"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Margin="0,20,0,0">
+                    <Button Content="Копировать детали"
+                            Command="{Binding CopyStackTraceToClipboardCommand}"
+                            Visibility="{Binding HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Padding="15,6" Margin="0,0,10,0"
+                            Background="Transparent" BorderBrush="#CCCCCC"/>
+                </StackPanel>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <TextBlock Text="&#xE783;"
+                                       FontFamily="Segoe MDL2 Assets"
+                                       FontSize="24" Foreground="#C5221F"
+                                       VerticalAlignment="Center" Margin="0,0,12,0"/>
+                            <TextBlock Text="Произошла ошибка"
+                                       FontSize="20" FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding Message, FallbackValue='Кастомная ошибка'}"
+                                   TextWrapping="Wrap"
+                                   FontSize="14" Foreground="#333333"
+                                   Margin="0,0,0,16"/>
+
+                        <Expander Header="Подробности" Visibility="{Binding HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Foreground="#666666">
+                            <Border Background="White" BorderBrush="#E5E5E5" BorderThickness="1"
+                                    CornerRadius="4" Margin="0,8,0,0">
+                                <TextBox Text="{Binding StackTrace, FallbackValue='Custom StackTrace Custom StackTrace', Mode=OneWay}"
+                                         IsReadOnly="True"
+                                         Background="Transparent" BorderThickness="0"
+                                         TextWrapping="Wrap" MaxHeight="200"
+                                         VerticalScrollBarVisibility="Auto"
+                                         Padding="10" FontSize="12" FontFamily="Cascadia Code, Consolas"/>
+                            </Border>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+        
+        <Border x:Name="ToastBorder"
+                CornerRadius="8"
+                BorderThickness="1"
+                Padding="15,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,20,20"
+                Opacity="0"
+                IsHitTestVisible="False">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" Direction="270" ShadowDepth="2" Opacity="0.1"/>
+            </Border.Effect>
+
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="#F0F9F1"/>
+                    <Setter Property="BorderBrush" Value="#B7E1CD"/>
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSuccess}" Value="False">
+                            <Setter Property="Background" Value="#FFF4F4"/>
+                            <Setter Property="BorderBrush" Value="#F9D7D7"/>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding IsToastVisible}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                         From="30" To="0" Duration="0:0:0.3">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CircleEase EasingMode="EaseInOut"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.4"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+
+            <Border.RenderTransform>
+                <TranslateTransform/>
+            </Border.RenderTransform>
+
+            <TextBlock Text="{Binding ToastMessage}" FontSize="13" FontWeight="Medium">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="#188038"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSuccess}" Value="False">
+                                <Setter Property="Foreground" Value="#C5221F"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Border>
+    </Grid>
+</Window>
