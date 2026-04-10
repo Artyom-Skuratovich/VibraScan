@@ -5,5 +5,10 @@
              StartupUri="Views/Windows/MigrationWindow.xaml">
     <Application.Resources>
         <!--ShutdownMode="OnExplicitShutdown"-->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles/AppStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -2,7 +2,7 @@
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class MainViewModel : ObservableObject
+    public partial class ChartsViewModel : ObservableObject
     {
 
     }
