@@ -9,30 +9,36 @@
              d:DataContext="{d:DesignInstance Type=vm:ChartsViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="1080" d:DesignWidth="1920">
     <UserControl.Resources>
-        <DrawingBrush x:Key="HatchedBrush"
-                      TileMode="Tile"
-                      Viewport="0,0,20,20"
-                      ViewportUnits="Absolute">
-            <DrawingBrush.Drawing>
-                <DrawingGroup>
-                    <GeometryDrawing Brush="#F5F5F5">
-                        <GeometryDrawing.Geometry>
-                            <RectangleGeometry Rect="0,0,20,20"/>
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/DataTemplates/ChartsTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-                    <GeometryDrawing>
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="#E0E0E0" Thickness="1"/>
-                        </GeometryDrawing.Pen>
+            <DrawingBrush x:Key="HatchedBrush"
+              TileMode="Tile"
+              Viewport="0,0,20,20"
+              ViewportUnits="Absolute">
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <GeometryDrawing Brush="#F5F5F5">
+                            <GeometryDrawing.Geometry>
+                                <RectangleGeometry Rect="0,0,20,20"/>
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
 
-                        <GeometryDrawing.Geometry>
-                            <LineGeometry StartPoint="0,20" EndPoint="20,0"/>
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
-                </DrawingGroup>
-            </DrawingBrush.Drawing>
-        </DrawingBrush>
+                        <GeometryDrawing>
+                            <GeometryDrawing.Pen>
+                                <Pen Brush="#E0E0E0" Thickness="1"/>
+                            </GeometryDrawing.Pen>
+
+                            <GeometryDrawing.Geometry>
+                                <LineGeometry StartPoint="0,20" EndPoint="20,0"/>
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid Background="White" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch">
