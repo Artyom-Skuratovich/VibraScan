@@ -108,8 +108,94 @@
             </DockPanel>
         </Border>
 
-        <Grid Grid.Column="2">
+        <Grid Grid.Column="2" x:Name="ChartsParentContainer">
             <Border Background="{StaticResource HatchedBrush}"/>
+
+            <Border x:Name="ChartCard"
+            Background="White"
+            CornerRadius="4"
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top"
+            Margin="15"
+            Visibility="{Binding IsChartsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Width" Value="450"/>
+                        <Setter Property="Height" Value="350"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked, ElementName=ExpandBtn}" Value="True">
+                                <Setter Property="Width" Value="{Binding ActualWidth, ElementName=ChartsParentContainer, ConverterParameter=30}"/>
+                                <Setter Property="Height" Value="{Binding ActualHeight, ElementName=ChartsParentContainer, ConverterParameter=30}"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                <Setter Property="Margin" Value="15"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.2"/>
+                </Border.Effect>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Background="#F8F9FA" CornerRadius="4,4,0,0" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+                        <DockPanel Margin="10,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding SelectedEngine.Name, FallbackValue='Двигатель не выбран'}"
+                                           VerticalAlignment="Center" FontWeight="Bold" FontSize="11" Foreground="#495057"/>
+                                <TextBlock Text=": "
+                                           FontWeight="Bold" FontSize="11" Foreground="#495057"/>
+                                <TextBlock Text="{Binding SelectedMeasurementDate, StringFormat='{}{0:dd.MM.yyyy}', FallbackValue='--.--.----'}"
+                                           FontWeight="Bold" FontSize="11" Foreground="#495057"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <ToggleButton x:Name="ExpandBtn" 
+                                      Background="Transparent" BorderThickness="0" Cursor="Hand" Width="30">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton">
+                                            <Setter Property="Content" Value="&#xE922;"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter Property="Content" Value="&#xE923;"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border Background="Transparent">
+                                                <TextBlock Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" 
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+
+                                <Button Command="{Binding CloseChartsCommand}" Background="Transparent" BorderThickness="0" Width="30">
+                                    <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Button>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="20">
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <GridSplitter Grid.Row="1" Width="4" HorizontalAlignment="Right" Background="#F0F0F0" Cursor="SizeWE"/>
+                    <GridSplitter Grid.Row="1" Height="4" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="#F0F0F0" Cursor="SizeNS"/>
+                </Grid>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>

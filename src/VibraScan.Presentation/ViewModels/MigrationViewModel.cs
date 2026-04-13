@@ -5,9 +5,11 @@ using VibraScan.Presentation.Services.Interfaces;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class MigrationViewModel(IWindowService windowService, Func<CancellationToken, Task> migrationRunner) : ObservableObject, ISupportCancellation
+    public partial class MigrationViewModel(IWindowService windowService, IErrorVisualizerService errorVisualizerService, Func<CancellationToken, Task> migrationRunner)
+        : ObservableObject, ISupportCancellation
     {
         private readonly IWindowService _windowService = windowService;
+        private readonly IErrorVisualizerService _errorVisualizerService = errorVisualizerService;
         private readonly Func<CancellationToken, Task> _migrationRunner = migrationRunner;
 
         [ObservableProperty]
@@ -40,7 +42,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                // TODO: вызов сервиса, который выводит ошибки пользователю.
+                _errorVisualizerService.ShowError("Критическая ошибка", "Ошибка при выполнении миграций", ex);
             }
         }
     }
