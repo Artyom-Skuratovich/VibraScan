@@ -7,16 +7,19 @@
         <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
     </Style>
 
-    <Style TargetType="ComboBox">
+    <Style x:Key="DarkComboBoxStyle" TargetType="ComboBox">
         <Setter Property="Height" Value="28"/>
-        <Setter Property="MaxWidth" Value="350"/>
         <Setter Property="Padding" Value="12,0"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Background" Value="#2D3238"/>
         <Setter Property="BorderBrush" Value="#454D55"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+
+    <Style x:Key="FieldHeaderStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
 
 </ResourceDictionary>

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using VibraScan.Application.Common.Interfaces;
 using VibraScan.Application.Engines.Queries.GetEngines;
@@ -9,46 +10,18 @@ using VibraScan.Presentation.Services.Interfaces;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public sealed partial class ChartsViewModel : ObservableObject, ISupportCancellation, IDisposable
+    public sealed partial class ChartsViewModel(ICommandDispatcher commandDispatcher, IErrorVisualizerService errorVisualizerService)
+        : ObservableObject, ISupportCancellation, IDisposable
     {
-        private readonly ICommandDispatcher _commandDispatcher;
-        private readonly IErrorVisualizerService _errorVisualizerService;
+        private readonly ICommandDispatcher _commandDispatcher = commandDispatcher;
+        private readonly IErrorVisualizerService _errorVisualizerService = errorVisualizerService;
         private CancellationTokenSource _cts = new();
-
-        public ChartsViewModel(ICommandDispatcher commandDispatcher, IErrorVisualizerService errorVisualizerService)
-        {
-            _commandDispatcher = commandDispatcher;
-            _errorVisualizerService = errorVisualizerService;
-
-            _ = LoadWorkshopsAsync();
-        }
 
         [ObservableProperty] private ObservableCollection<Workshop> _workshops = [];
         [ObservableProperty] private ObservableCollection<EngineBriefDto> _engines = [];
         [ObservableProperty] private ObservableCollection<Point> _points = [];
         [ObservableProperty] private ObservableCollection<MeasurementProfile> _profiles = [];
         [ObservableProperty] private ObservableCollection<DateTime> _measurementDates = [];
-
-        private async Task LoadWorkshopsAsync()
-        {
-            try
-            {
-                var workshops = await _commandDispatcher.SendAsync(new GetWorkshopsQuery(), _cts.Token);
-
-                foreach (var workshop in workshops)
-                {
-                    Workshops.Add(workshop);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-
-            }
-            catch (Exception ex)
-            {
-                _errorVisualizerService.ShowError("Критическая ошибка", "Ошибка при загрузке цехов", ex);
-            }
-        }
 
         [ObservableProperty] private Workshop? _selectedWorkshop;
 
@@ -98,6 +71,34 @@ namespace VibraScan.Presentation.ViewModels
 
         [ObservableProperty]
         private bool _isChartsVisible;
+
+        [RelayCommand]
+        private async Task OnLoaded(CancellationToken ct)
+        {
+            try
+            {
+                var workshops = await _commandDispatcher.SendAsync(new GetWorkshopsQuery(), ct);
+
+                foreach (var workshop in workshops)
+                {
+                    Workshops.Add(workshop);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+            catch (Exception ex)
+            {
+                _errorVisualizerService.ShowError("Критическая ошибка", "Ошибка при загрузке цехов", ex);
+            }
+        }
+
+        [RelayCommand]
+        private async Task CloseCharts(CancellationToken ct)
+        {
+
+        }
 
         public void Cancel()
         {

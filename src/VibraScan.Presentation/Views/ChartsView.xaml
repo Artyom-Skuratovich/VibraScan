@@ -55,10 +55,8 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Foreground="White">
                     <Grid Margin="30">
                         <Grid.Resources>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource FieldHeaderStyle}">
                                 <Setter Property="Foreground" Value="#ADB5BD"/>
-                                <Setter Property="FontSize" Value="12"/>
-                                <Setter Property="FontWeight" Value="SemiBold"/>
                             </Style>
                         </Grid.Resources>
 
@@ -90,19 +88,19 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0" Text="Цех"/>
-                        <ComboBox Grid.Row="2"/>
+                        <ComboBox Grid.Row="2" Style="{StaticResource DarkComboBoxStyle}"/>
 
                         <TextBlock Grid.Row="4" Text="Двигатель"/>
-                        <ComboBox Grid.Row="6"/>
+                        <ComboBox Grid.Row="6" Style="{StaticResource DarkComboBoxStyle}"/>
 
                         <TextBlock Grid.Row="8" Text="Точка измерения"/>
-                        <ComboBox Grid.Row="10"/>
+                        <ComboBox Grid.Row="10" Style="{StaticResource DarkComboBoxStyle}"/>
 
                         <TextBlock Grid.Row="12" Text="Ось"/>
-                        <ComboBox Grid.Row="14"/>
+                        <ComboBox Grid.Row="14" Style="{StaticResource DarkComboBoxStyle}"/>
 
                         <TextBlock Grid.Row="16" Text="Параметр"/>
-                        <ComboBox Grid.Row="18"/>
+                        <ComboBox Grid.Row="18" Style="{StaticResource DarkComboBoxStyle}"/>
                     </Grid>
                 </ScrollViewer>
             </DockPanel>
@@ -149,11 +147,14 @@
                         <DockPanel Margin="10,0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding SelectedEngine.Name, FallbackValue='Двигатель не выбран'}"
-                                           VerticalAlignment="Center" FontWeight="Bold" FontSize="11" Foreground="#495057"/>
+                                           Style="{StaticResource FieldHeaderStyle}"
+                                           VerticalAlignment="Center" FontWeight="Bold" Foreground="#495057"/>
                                 <TextBlock Text=": "
-                                           FontWeight="Bold" FontSize="11" Foreground="#495057"/>
+                                           Style="{StaticResource FieldHeaderStyle}"
+                                           FontWeight="Bold" Foreground="#495057"/>
                                 <TextBlock Text="{Binding SelectedMeasurementDate, StringFormat='{}{0:dd.MM.yyyy}', FallbackValue='--.--.----'}"
-                                           FontWeight="Bold" FontSize="11" Foreground="#495057"/>
+                                           Style="{StaticResource FieldHeaderStyle}"
+                                           FontWeight="Bold" Foreground="#495057"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -186,11 +187,37 @@
                         </DockPanel>
                     </Border>
 
-                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                        <StackPanel Margin="20">
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
+                        <StackPanel Grid.Row="0" Margin="20,15,20,10" HorizontalAlignment="Left">
+                            <TextBlock Style="{StaticResource FieldHeaderStyle}"
+                                       Text="Дата замера"
+                                       Foreground="#6C757D"
+                                       Margin="0,0,0,5"/>
+
+                            <ComboBox Style="{StaticResource DarkComboBoxStyle}"
+                                      ItemsSource="{Binding MeasurementDates}"
+                                      SelectedItem="{Binding SelectedMeasurementDate}"
+                                      Width="200">
+
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding StringFormat={}{0:dd.MM.yyyy HH:mm}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </StackPanel>
-                    </ScrollViewer>
+
+                        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="20">
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
 
                     <GridSplitter Grid.Row="1" Width="4" HorizontalAlignment="Right" Background="#F0F0F0" Cursor="SizeWE"/>
                     <GridSplitter Grid.Row="1" Height="4" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="#F0F0F0" Cursor="SizeNS"/>

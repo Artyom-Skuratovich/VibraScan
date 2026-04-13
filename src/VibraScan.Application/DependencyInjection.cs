@@ -10,6 +10,7 @@ namespace VibraScan.Application
         public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+            services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         }
     }
