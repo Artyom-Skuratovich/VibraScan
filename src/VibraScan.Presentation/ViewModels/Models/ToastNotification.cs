@@ -3,8 +3,10 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace VibraScan.Presentation.ViewModels.Models
 {
-    public partial class ToastNotification : ObservableObject
+    public partial class ToastNotification(int delayMs = 2000) : ObservableObject
     {
+        private readonly int _delayMs = delayMs;
+
         [ObservableProperty]
         private string? _message;
 
@@ -15,8 +17,28 @@ namespace VibraScan.Presentation.ViewModels.Models
         private bool _isVisible;
 
         [RelayCommand]
+        private async Task Show(CancellationToken ct)
+        {
+            IsVisible = true;
+
+            try
+            {
+                await Task.Delay(_delayMs, ct);
+                IsVisible = false;
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+        }
+
+        [RelayCommand]
         private void Close()
         {
+            if (ShowCommand.CanBeCanceled)
+            {
+                ShowCommand.Cancel();
+            }
             IsVisible = false;
         }
     }

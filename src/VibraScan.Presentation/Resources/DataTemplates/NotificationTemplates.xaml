@@ -5,18 +5,13 @@
 
     <DataTemplate DataType="{x:Type local:ToastNotification}">
         <Border x:Name="NotifyBorder"
-                CornerRadius="8" BorderThickness="1" Padding="15,10"
+                CornerRadius="8" Padding="15,10" BorderThickness="1"
                 Background="#F0F9F1" BorderBrush="#B7E1CD"
-                Opacity="0" IsHitTestVisible="True"
-                Tag="{Binding IsVisible, Mode=TwoWay}">
+                Opacity="0" Visibility="Collapsed">
 
             <Border.Effect>
                 <DropShadowEffect BlurRadius="15" Direction="270" ShadowDepth="2" Opacity="0.1"/>
             </Border.Effect>
-
-            <Border.RenderTransform>
-                <TranslateTransform Y="20"/>
-            </Border.RenderTransform>
 
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -42,34 +37,26 @@
             </DataTrigger>
 
             <DataTrigger Binding="{Binding IsVisible}" Value="True">
+                <Setter TargetName="NotifyBorder" Property="Visibility" Value="Visible"/>
+
                 <DataTrigger.EnterActions>
-                    <BeginStoryboard x:Name="ShowAnim">
-                        <Storyboard FillBehavior="Stop">
+                    <BeginStoryboard>
+                        <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="NotifyBorder"
                                              Storyboard.TargetProperty="Opacity"
                                              To="1" Duration="0:0:0.2"/>
-                            <DoubleAnimation Storyboard.TargetName="NotifyBorder"
-                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                                             To="0" Duration="0:0:0.3"/>
-
-                            <DoubleAnimation Storyboard.TargetName="NotifyBorder"
-                                             Storyboard.TargetProperty="Opacity"
-                                             To="0" BeginTime="0:0:2.7" Duration="0:0:0.3"/>
-
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NotifyBorder"
-                                                           Storyboard.TargetProperty="Tag"
-                                                           BeginTime="0:0:3.0">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0">
-                                    <DiscreteObjectKeyFrame.Value>
-                                        <system:Boolean>False</system:Boolean>
-                                    </DiscreteObjectKeyFrame.Value>
-                                </DiscreteObjectKeyFrame>
-                            </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </BeginStoryboard>
                 </DataTrigger.EnterActions>
+
                 <DataTrigger.ExitActions>
-                    <StopStoryboard BeginStoryboardName="ShowAnim"/>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="NotifyBorder"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="0" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
                 </DataTrigger.ExitActions>
             </DataTrigger>
         </DataTemplate.Triggers>

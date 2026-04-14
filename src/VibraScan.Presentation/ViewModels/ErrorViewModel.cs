@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Threading.Tasks;
 using VibraScan.Presentation.Services.Interfaces;
 using VibraScan.Presentation.ViewModels.Models;
 
@@ -38,14 +39,13 @@ namespace VibraScan.Presentation.ViewModels
             _clipboard = clipboard;
         }
 
-        [RelayCommand(CanExecute = nameof(HasDetails))]
-        private void CopyToClipboard()
+        [RelayCommand(CanExecute = nameof(HasDetails), AllowConcurrentExecutions = true)]
+        private async Task CopyToClipboard()
         {
             CurrentToast.IsSuccess = _clipboard.SetText(StackTrace!);
             CurrentToast.Message = CurrentToast.IsSuccess ? "Скопировано в буфер" : "Ошибка доступа к буферу";
 
-            CurrentToast.IsVisible = false;
-            CurrentToast.IsVisible = true;
+            await CurrentToast.ShowCommand.ExecuteAsync(null);
         }
     }
 }
