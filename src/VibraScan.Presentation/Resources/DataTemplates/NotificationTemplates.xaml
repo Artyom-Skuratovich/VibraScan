@@ -35,35 +35,41 @@
         </Border>
 
         <DataTemplate.Triggers>
-            <!-- Если ошибка -->
             <DataTrigger Binding="{Binding IsSuccess}" Value="False">
                 <Setter TargetName="NotifyBorder" Property="Background" Value="#FFF4F4"/>
                 <Setter TargetName="NotifyBorder" Property="BorderBrush" Value="#F9D7D7"/>
                 <Setter TargetName="MsgText" Property="Foreground" Value="#C5221F"/>
             </DataTrigger>
 
-            <!-- Анимации появления и автозакрытия -->
             <DataTrigger Binding="{Binding IsVisible}" Value="True">
                 <DataTrigger.EnterActions>
                     <BeginStoryboard x:Name="ShowAnim">
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="NotifyBorder" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2"/>
-                            <DoubleAnimation Storyboard.TargetName="NotifyBorder" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" To="0" Duration="0:0:0.3"/>
+                        <Storyboard FillBehavior="Stop">
+                            <DoubleAnimation Storyboard.TargetName="NotifyBorder"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="1" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetName="NotifyBorder"
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                             To="0" Duration="0:0:0.3"/>
 
-                            <!-- Таймер 5 секунд -->
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NotifyBorder" Storyboard.TargetProperty="Tag" BeginTime="0:0:5">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static system:Boolean.FalseString}"/>
+                            <DoubleAnimation Storyboard.TargetName="NotifyBorder"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="0" BeginTime="0:0:2.7" Duration="0:0:0.3"/>
+
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NotifyBorder"
+                                                           Storyboard.TargetProperty="Tag"
+                                                           BeginTime="0:0:3.0">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                    <DiscreteObjectKeyFrame.Value>
+                                        <system:Boolean>False</system:Boolean>
+                                    </DiscreteObjectKeyFrame.Value>
+                                </DiscreteObjectKeyFrame>
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </BeginStoryboard>
                 </DataTrigger.EnterActions>
                 <DataTrigger.ExitActions>
                     <StopStoryboard BeginStoryboardName="ShowAnim"/>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="NotifyBorder" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3"/>
-                        </Storyboard>
-                    </BeginStoryboard>
                 </DataTrigger.ExitActions>
             </DataTrigger>
         </DataTemplate.Triggers>
