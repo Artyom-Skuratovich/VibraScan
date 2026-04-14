@@ -25,6 +25,16 @@ namespace VibraScan.Presentation.Services
             }
         }
 
+        public void Shutdown(int exitCode = 0)
+        {
+            foreach (var entry in _openWindows)
+            {
+                Close(entry.Key);
+            }
+
+            System.Windows.Application.Current.Shutdown(exitCode);
+        }
+
         public void Show<TVm>() where TVm : class
         {
             PrepareAndDisplay(sp => sp.GetRequiredService<TVm>(), false);
@@ -109,7 +119,12 @@ namespace VibraScan.Presentation.Services
             else
             {
                 var active = System.Windows.Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive && w.IsVisible);
-                window.Owner = active ?? System.Windows.Application.Current.MainWindow;
+                var owner = active ?? System.Windows.Application.Current.MainWindow;
+
+                if ((owner != null) && (owner != window))
+                {
+                    window.Owner = owner;
+                }
             }
         }
 

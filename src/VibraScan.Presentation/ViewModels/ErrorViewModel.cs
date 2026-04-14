@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VibraScan.Presentation.Services.Interfaces;
+using VibraScan.Presentation.ViewModels.Models;
 
 namespace VibraScan.Presentation.ViewModels
 {
@@ -21,38 +22,30 @@ namespace VibraScan.Presentation.ViewModels
         private bool _hasDetails;
 
         [ObservableProperty]
-        private bool _isToastVisible;
+        public ToastNotification _currentToast;
 
-        [ObservableProperty]
-        private string _toastMessage = string.Empty;
-
-        [ObservableProperty]
-        private bool _isSuccess;
-
-        public ErrorViewModel(string title, string message, Exception? ex, IClipboardService clipboard)
+        public ErrorViewModel(ErrorParameters parameters, IClipboardService clipboard)
         {
-            Title = title;
-            Message = message;
+            Title = parameters.Title;
+            Message = parameters.Message;
 
-            if (ex != null)
+            if (parameters.Exception != null)
             {
-                StackTrace = ex.ToString();
+                StackTrace = parameters.Exception.ToString();
                 HasDetails = true;
             }
-
+            CurrentToast = new ToastNotification();
             _clipboard = clipboard;
         }
 
         [RelayCommand(CanExecute = nameof(HasDetails))]
-        private async Task CopyStackTraceToClipboardAsync()
+        private void CopyToClipboard()
         {
-            IsSuccess = _clipboard.SetText(StackTrace!);
+            CurrentToast.IsSuccess = _clipboard.SetText(StackTrace!);
+            CurrentToast.Message = CurrentToast.IsSuccess ? "Скопировано в буфер" : "Ошибка доступа к буферу";
 
-            ToastMessage = IsSuccess ? "Скопировано в буфер!" : "Ошибка доступа к буферу";
-            IsToastVisible = true;
-
-            await Task.Delay(2500);
-            IsToastVisible = false;
+            CurrentToast.IsVisible = false;
+            CurrentToast.IsVisible = true;
         }
     }
 }

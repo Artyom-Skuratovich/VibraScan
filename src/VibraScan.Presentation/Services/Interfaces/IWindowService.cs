@@ -11,5 +11,7 @@
         bool? ShowDialog<TVm, TParam>(TParam param) where TVm : class;
 
         void Close(object model);
+
+        void Shutdown(int exitCode = 0);
     }
 }

@@ -18,6 +18,9 @@ namespace VibraScan.Presentation.ViewModels
         [ObservableProperty]
         private string _title = "Подготовка базы данных";
 
+        [ObservableProperty]
+        private bool _isLoading = true;
+
         public void Cancel()
         {
             if (LoadedCommand.CanBeCanceled)
@@ -31,18 +34,20 @@ namespace VibraScan.Presentation.ViewModels
         {
             try
             {
-                await _migrationRunner(ct);
+                await Task.Run(async () => await _migrationRunner(ct), ct);
 
                 _windowService.Close(this);
                 _windowService.Show<MainViewModel>();
             }
             catch (OperationCanceledException)
             {
-
+                _windowService.Shutdown();
             }
             catch (Exception ex)
             {
+                IsLoading = false;
                 _errorVisualizerService.ShowError("Критическая ошибка", "Ошибка при выполнении миграций", ex);
+                _windowService.Shutdown();
             }
         }
     }

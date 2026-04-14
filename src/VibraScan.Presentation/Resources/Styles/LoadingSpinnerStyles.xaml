@@ -31,9 +31,6 @@
         <Viewbox Width="100" Height="100">
             <Canvas Width="100" Height="100" CacheMode="BitmapCache">
 
-                <!--Каждый кружок обёрнут в Grid, который занимает весь Canvas.
-                Мы будем вращать эти Grid-ы с разной скоростью/задержкой.-->
-
                 <Grid x:Name="C1" Style="{StaticResource SpinnerOrbitStyle}">
                     <Ellipse Style="{StaticResource SpinnerCircleStyle}"/>
                 </Grid>
@@ -68,52 +65,54 @@
         </Viewbox>
 
         <ControlTemplate.Triggers>
-            <Trigger Property="IsVisible" Value="True">
-                <Trigger.EnterActions>
+            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                <DataTrigger.EnterActions>
+                    <ResumeStoryboard BeginStoryboardName="SpinBegin"/>
                     <BeginStoryboard x:Name="SpinBegin">
-                        <Storyboard RepeatBehavior="Forever" Timeline.DesiredFrameRate="30">
+                        <Storyboard Timeline.DesiredFrameRate="30">
                             <DoubleAnimation Storyboard.TargetName="C1" Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)"
-                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.0">
+                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.0" RepeatBehavior="Forever">
                                 <DoubleAnimation.EasingFunction>
                                     <CircleEase EasingMode="EaseInOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
 
                             <DoubleAnimation Storyboard.TargetName="C2" Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)"
-                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.1">
+                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.1" RepeatBehavior="Forever">
                                 <DoubleAnimation.EasingFunction>
                                     <CircleEase EasingMode="EaseInOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
 
                             <DoubleAnimation Storyboard.TargetName="C3" Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)"
-                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.2">
+                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.2" RepeatBehavior="Forever">
                                 <DoubleAnimation.EasingFunction>
                                     <CircleEase EasingMode="EaseInOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
 
                             <DoubleAnimation Storyboard.TargetName="C4" Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)"
-                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.3">
+                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.3" RepeatBehavior="Forever">
                                 <DoubleAnimation.EasingFunction>
                                     <CircleEase EasingMode="EaseInOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
 
                             <DoubleAnimation Storyboard.TargetName="C5" Storyboard.TargetProperty="(RenderTransform).(RotateTransform.Angle)"
-                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.4">
+                                             From="0" To="360" Duration="0:0:2" BeginTime="0:0:0.4" RepeatBehavior="Forever">
                                 <DoubleAnimation.EasingFunction>
                                     <CircleEase EasingMode="EaseInOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                         </Storyboard>
                     </BeginStoryboard>
-                </Trigger.EnterActions>
+                </DataTrigger.EnterActions>
 
-                <Trigger.ExitActions>
-                    <StopStoryboard BeginStoryboardName="SpinBegin"/>
-                </Trigger.ExitActions>
-            </Trigger>
+                <DataTrigger.ExitActions>
+                    <PauseStoryboard BeginStoryboardName="SpinBegin"/>
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+
         </ControlTemplate.Triggers>
 
     </ControlTemplate>
