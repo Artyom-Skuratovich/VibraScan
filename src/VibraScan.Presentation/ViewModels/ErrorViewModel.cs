@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Threading.Tasks;
 using VibraScan.Presentation.Services.Interfaces;
 using VibraScan.Presentation.ViewModels.Models;
 
