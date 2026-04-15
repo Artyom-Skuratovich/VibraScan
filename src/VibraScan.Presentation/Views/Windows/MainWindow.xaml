@@ -4,9 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VibraScan.Presentation.Views.Windows"
+        xmlns:ctrls="clr-namespace:VibraScan.Presentation.Views"
+        xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <ToolBarTray Grid.Row="0">
+            <ToolBar ToolBarTray.IsLocked="True">
+                <Button >
+                    
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+
+        <TabControl Grid.Row="1" Margin="5">
+            <TabItem Header="Графики">
+                <ctrls:ChartsView DataContext="{Binding ChartsVm}"/>
+            </TabItem>
+            <TabItem Header="Общая информация">
+                
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

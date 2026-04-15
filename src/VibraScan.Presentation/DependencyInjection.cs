@@ -32,6 +32,8 @@ namespace VibraScan.Presentation
             services.AddTransient<ErrorViewModel>();
             services.AddTransient<ErrorWindow>();
 
+            services.AddTransient<ChartsViewModel>();
+
             services.AddSingleton<IWindowService>(sp =>
             {
                 var ws = new WindowService(sp.GetRequiredService<IServiceScopeFactory>());

@@ -70,7 +70,7 @@ namespace VibraScan.Presentation.ViewModels
         private DateTime? _selectedMeasurementDate;
 
         [ObservableProperty]
-        private bool _isChartsVisible;
+        private bool _isChartsVisible = true;
 
         [RelayCommand]
         private async Task OnLoaded(CancellationToken ct)
