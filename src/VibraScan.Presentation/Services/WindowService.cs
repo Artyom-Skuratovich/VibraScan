@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
 using System.Windows;
 using VibraScan.Presentation.Common;
 using VibraScan.Presentation.Common.Interfaces;
@@ -10,7 +11,7 @@ namespace VibraScan.Presentation.Services
     {
         private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
         private readonly Dictionary<Type, Type> _mappings = [];
-        private readonly Dictionary<object, (Window Window, IServiceScope Scope)> _openWindows = [];
+        private readonly ConcurrentDictionary<object, (Window Window, IServiceScope Scope)> _openWindows = [];
 
         public void Register<TVm, TWin>() where TVm : class where TWin : Window
         {
@@ -21,15 +22,15 @@ namespace VibraScan.Presentation.Services
         {
             if (_openWindows.TryGetValue(model, out var entry))
             {
-                entry.Window.Close();
+                entry.Window.Dispatcher.Invoke(entry.Window.Close);
             }
         }
 
         public void Shutdown(int exitCode = 0)
         {
-            foreach (var entry in _openWindows)
+            foreach (var model in _openWindows.Keys)
             {
-                Close(entry.Key);
+                Close(model);
             }
 
             System.Windows.Application.Current.Shutdown(exitCode);
@@ -137,7 +138,7 @@ namespace VibraScan.Presentation.Services
 
             window.Closed += (s, e) =>
             {
-                if (_openWindows.Remove(model, out var entry))
+                if (_openWindows.TryRemove(model, out var entry))
                 {
                     entry.Scope.Dispose();
                 }
