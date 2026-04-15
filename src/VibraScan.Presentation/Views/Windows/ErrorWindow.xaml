@@ -28,12 +28,12 @@
         <Border Padding="24">
             <DockPanel>
                 <Button DockPanel.Dock="Bottom"
-                            Content="Копировать детали"
-                            Command="{Binding CopyToClipboardCommand}"
-                            Visibility="{Binding HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
-                            Padding="15,6" Margin="0,20,10,0"
-                            Background="Transparent" BorderBrush="#CCCCCC"
-                            HorizontalAlignment="Right"/>
+                        Content="Копировать детали"
+                        Command="{Binding CopyToClipboardCommand}"
+                        Visibility="{Binding HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Padding="15,6" Margin="0,20,10,0"
+                        Background="Transparent" BorderBrush="#CCCCCC"
+                        HorizontalAlignment="Right"/>
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>

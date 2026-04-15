@@ -11,9 +11,9 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <DrawingBrush x:Key="HatchedBrush"
-              TileMode="Tile"
-              Viewport="0,0,20,20"
-              ViewportUnits="Absolute">
+                          TileMode="Tile"
+                          Viewport="0,0,20,20"
+                          ViewportUnits="Absolute">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
                         <GeometryDrawing Brush="#F5F5F5">
@@ -112,12 +112,12 @@
             <Border Background="{StaticResource HatchedBrush}"/>
 
             <Border x:Name="ChartCard"
-            Background="White"
-            CornerRadius="4"
-            HorizontalAlignment="Left" 
-            VerticalAlignment="Top"
-            Margin="15"
-            Visibility="{Binding IsChartsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Background="White"
+                    CornerRadius="4"
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top"
+                    Margin="15"
+                    Visibility="{Binding IsChartsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                 <Border.Style>
                     <Style TargetType="Border">
