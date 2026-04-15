@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using VibraScan.Presentation.Common.Interfaces;
 using VibraScan.Presentation.Services.Interfaces;
+using VibraScan.Presentation.ViewModels.Models;
 
 namespace VibraScan.Presentation.ViewModels
 {
@@ -19,7 +20,7 @@ namespace VibraScan.Presentation.ViewModels
         private string _title = "Подготовка базы данных";
 
         [ObservableProperty]
-        private bool _isLoading = true;
+        private LoadingSpinner _spinner = new();
 
         public void Cancel()
         {
@@ -45,7 +46,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                IsLoading = false;
+                Spinner.IsPaused = true;
                 _errorVisualizerService.ShowError("Критическая ошибка", "Ошибка при выполнении миграций", ex);
                 _windowService.Shutdown();
             }

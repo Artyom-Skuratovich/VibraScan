@@ -16,13 +16,13 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Resources/Styles/LoadingSpinnerStyles.xaml"/>
+                <ResourceDictionary Source="../../Resources/DataTemplates/LoadingSpinnerTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Control Template="{StaticResource SpinnerTemplate}" Margin="0,0,0,30"/>
+            <ContentControl Content="{Binding Spinner}" Margin="0,0,0,30"/>
 
             <TextBlock Text="{Binding StatusText, FallbackValue='Выполняются миграции...'}" 
                        Foreground="Black" 
