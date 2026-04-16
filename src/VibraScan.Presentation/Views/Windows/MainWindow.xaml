@@ -28,7 +28,7 @@
                 <ctrls:ChartsView DataContext="{Binding ChartsVm}"/>
             </TabItem>
             <TabItem Header="Общая информация">
-                
+                <ctrls:EngineManagerView/>
             </TabItem>
         </TabControl>
     </Grid>

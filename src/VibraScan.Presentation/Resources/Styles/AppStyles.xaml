@@ -15,6 +15,11 @@
 
     <Style TargetType="ToggleButton" BasedOn="{StaticResource BaseButtonStyle}"/>
 
+    <Style TargetType="TextBox">
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
     <Style x:Key="DarkComboBoxStyle" TargetType="ComboBox">
         <Setter Property="Height" Value="28"/>
         <Setter Property="Padding" Value="12,0"/>
