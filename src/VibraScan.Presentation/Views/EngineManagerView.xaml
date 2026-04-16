@@ -102,7 +102,7 @@
 
                             <!-- Кнопка Найти (Компактная) -->
                             <Button Grid.Column="3" VerticalAlignment="Bottom" Height="30" Padding="15,0"
-                            Background="#2563EB" Foreground="White" BorderThickness="0">
+                                    Background="#2563EB" Foreground="White" BorderThickness="0">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                     <TextBlock Text="Найти" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>

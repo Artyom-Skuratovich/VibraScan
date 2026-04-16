@@ -99,6 +99,9 @@ namespace VibraScan.Presentation.Infrastructure.Helpers
 
                 if (string.IsNullOrEmpty(placeholderValue)) return;
 
+                drawingContext.PushClip(new RectangleGeometry(new Rect(new Size(textBox.ActualWidth, textBox.ActualHeight))));
+                var placeholderBrush = textBox.TryFindResource("DisabledElementTextBrush") as Brush ?? new SolidColorBrush(Color.FromRgb(158, 158, 158));
+
                 var text = new FormattedText(
                     placeholderValue,
                     CultureInfo.CurrentCulture,
@@ -108,7 +111,8 @@ namespace VibraScan.Presentation.Infrastructure.Helpers
                                  textBox.FontWeight,
                                  textBox.FontStretch),
                     textBox.FontSize,
-                    SystemColors.InactiveCaptionBrush,
+                    placeholderBrush,
+                    //SystemColors.InactiveCaptionBrush,
                     VisualTreeHelper.GetDpi(textBox).PixelsPerDip);
 
                 var rect = textBox.GetRectFromCharacterIndex(0, true);

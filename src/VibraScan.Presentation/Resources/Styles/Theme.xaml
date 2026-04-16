@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <SolidColorBrush x:Key="PrimaryActionBrush" Color="#0067C0"/>
+    <SolidColorBrush x:Key="PrimaryActionBorderBrush" Color="#3289D1"/>
+
+    <SolidColorBrush x:Key="PrimaryActionHoverBrush" Color="#1975C5"/>
+    <SolidColorBrush x:Key="DefaultElementHoverBrush" Color="#EEEEEE"/>
+
+    <SolidColorBrush x:Key="PrimaryActionPressedBrush" Color="#005FB8"/>
+    <SolidColorBrush x:Key="DefaultElementPressedBrush" Color="#E5E5E5"/>
+
+    <SolidColorBrush x:Key="DefaultElementBackgroundBrush" Color="#FBFBFB"/>
+    <SolidColorBrush x:Key="DefaultElementBorderBrush" Color="#C3C3C3"/>
+    <SolidColorBrush x:Key="SubtleBorderBrush" Color="#E5E5E5"/>
+
+    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#1A1A1A"/>
+    <SolidColorBrush x:Key="InvertedTextBrush" Color="White"/>
+
+    <SolidColorBrush x:Key="DisabledElementBackgrroundBrush" Color="#F5F5F5"/>
+    <SolidColorBrush x:Key="DisabledElementTextBrush" Color="#9E9E9E"/>
+    <SolidColorBrush x:Key="DisabledElementBorderBrush" Color="#E5E5E5"/>
+
+    <FontFamily x:Key="MainFont">Segoe UI Variable Display, Segoe UI, Tahoma</FontFamily>
+    <sys:Double x:Key="FontSizeNormal">14</sys:Double>
+    <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
+
+</ResourceDictionary>
