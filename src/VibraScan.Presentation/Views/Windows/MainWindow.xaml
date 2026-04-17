@@ -19,7 +19,7 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="Ok" IsEnabled="True"/>
             <Button Content="Yes" IsEnabled="True" Style="{StaticResource PrimaryButtonStyle}"/>
-            <TextBox h:TextBoxHelper.Placeholder="Введите текст.."/>
+            <TextBox h:TextBoxHelper.Placeholder="Введите текст..." Width="200" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         </StackPanel>
 
         <TabControl Grid.Row="1" Margin="5">

@@ -5,6 +5,55 @@
     <Style TargetType="TextBox">
         <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
         <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}"/>
+        <Setter Property="Background" Value="{StaticResource DefaultElementBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource DefaultElementBorderBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="8,5,8,5"/>
+        <Setter Property="SelectionBrush" Value="{StaticResource PrimaryActionHoverBrush}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource ControlCornerRadius}">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0" />
+                        </Border>
+
+                        <Border x:Name="FocusedBorder"
+                            BorderBrush="{StaticResource PrimaryActionBrush}"
+                            BorderThickness="0,0,0,2"
+                            CornerRadius="{StaticResource ControlCornerRadius}"
+                            Visibility="Collapsed"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource DefaultElementHoverBrush}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#999999"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource DefaultElementBorderBrush}"/>
+                            <Setter TargetName="FocusedBorder" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{StaticResource DisabledElementBackgroundBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledElementTextBrush}"/>
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--<Style TargetType="TextBox">
+        <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}"/>
         <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
         <Setter Property="Background" Value="{StaticResource DefaultElementBackgroundBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource SubtleBorderBrush}"/>
@@ -68,6 +117,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
 </ResourceDictionary>

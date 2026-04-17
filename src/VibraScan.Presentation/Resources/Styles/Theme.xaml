@@ -18,7 +18,7 @@
     <SolidColorBrush x:Key="PrimaryTextBrush" Color="#1A1A1A"/>
     <SolidColorBrush x:Key="InvertedTextBrush" Color="White"/>
 
-    <SolidColorBrush x:Key="DisabledElementBackgrroundBrush" Color="#F5F5F5"/>
+    <SolidColorBrush x:Key="DisabledElementBackgroundBrush" Color="#F5F5F5"/>
     <SolidColorBrush x:Key="DisabledElementTextBrush" Color="#9E9E9E"/>
     <SolidColorBrush x:Key="DisabledElementBorderBrush" Color="#E5E5E5"/>
 

@@ -26,6 +26,20 @@ namespace VibraScan.Presentation.Infrastructure.Helpers
         {
             if (d is TextBox textBox)
             {
+                if (!textBox.IsLoaded)
+                {
+                    textBox.Loaded += (s, _) =>
+                    {
+                        var tb = (TextBox)s;
+                        tb.Tag = tb.Padding;
+                        UpdateAdornerVisibility(tb);
+                    };
+                }
+                else
+                {
+                    UpdateTextBoxMinWidth(textBox);
+                }
+
                 textBox.TextChanged -= TextBoxControlTextChanged;
                 textBox.TextChanged += TextBoxControlTextChanged;
 
@@ -81,7 +95,66 @@ namespace VibraScan.Presentation.Infrastructure.Helpers
             if (GetOrCreateAdorner(textBox, out var adorner))
             {
                 adorner!.Visibility = textBox.Text.Length > 0 ? Visibility.Hidden : Visibility.Visible;
+
+                if (string.IsNullOrEmpty(textBox.Text) && (textBox.HorizontalContentAlignment == HorizontalAlignment.Center))
+                {
+                    var offset = CalculatePlaceholderOffset(textBox);
+                    var basePadding = (Thickness)textBox.Tag;
+                    textBox.Padding = new Thickness(offset, basePadding.Top, basePadding.Right, basePadding.Bottom);
+                    textBox.HorizontalContentAlignment = HorizontalAlignment.Left;
+                }
+                else if (string.IsNullOrEmpty(textBox.Text))
+                {
+                    if (textBox.Tag is Thickness basePadding)
+                    {
+                        textBox.Padding = basePadding;
+                    }
+                    textBox.HorizontalContentAlignment = HorizontalAlignment.Center;
+                }
             }
+        }
+
+        private static void UpdateTextBoxMinWidth(TextBox textBox)
+        {
+            var placeholder = GetPlaceholder(textBox);
+
+            if (string.IsNullOrEmpty(placeholder)) return;
+
+            var typeface = new Typeface(textBox.FontFamily, textBox.FontStyle, textBox.FontWeight, textBox.FontStretch);
+            var formattedText = new FormattedText(
+                    placeholder,
+                    CultureInfo.CurrentCulture,
+                    textBox.FlowDirection,
+                    typeface,
+                    textBox.FontSize,
+                    Brushes.Black,
+                    VisualTreeHelper.GetDpi(textBox).PixelsPerDip);
+
+            var requiredWidth = formattedText.Width + textBox.Padding.Left + textBox.Padding.Right + textBox.BorderThickness.Left + textBox.BorderThickness.Right + 4;
+
+            textBox.MinWidth = requiredWidth;
+        }
+
+        private static double CalculatePlaceholderOffset(TextBox textBox)
+        {
+            var placeholder = GetPlaceholder(textBox);
+
+            if (string.IsNullOrEmpty(placeholder)) return textBox.Padding.Left;
+
+            var typeface = new Typeface(textBox.FontFamily, textBox.FontStyle, textBox.FontWeight, textBox.FontStretch);
+            var formattedText = new FormattedText(
+                    placeholder,
+                    CultureInfo.CurrentCulture,
+                    textBox.FlowDirection,
+                    typeface,
+                    textBox.FontSize,
+                    Brushes.Black,
+                    VisualTreeHelper.GetDpi(textBox).PixelsPerDip);
+
+            var contentWidth = textBox.ActualWidth - textBox.BorderThickness.Left - textBox.BorderThickness.Right + 2;
+            var offset = (contentWidth - formattedText.Width) / 2;
+
+            return Math.Max(0, offset);
         }
 
         private class PlaceholderAdorner : Adorner
@@ -99,32 +172,40 @@ namespace VibraScan.Presentation.Infrastructure.Helpers
 
                 if (string.IsNullOrEmpty(placeholderValue)) return;
 
-                drawingContext.PushClip(new RectangleGeometry(new Rect(new Size(textBox.ActualWidth, textBox.ActualHeight))));
-                var placeholderBrush = textBox.TryFindResource("DisabledElementTextBrush") as Brush ?? new SolidColorBrush(Color.FromRgb(158, 158, 158));
+                var typeface = new Typeface(textBox.FontFamily, textBox.FontStyle, textBox.FontWeight, textBox.FontStretch);
+                var foreground = textBox.TryFindResource("DisabledElementTextBrush") as Brush ?? SystemColors.InactiveCaptionBrush;
 
-                var text = new FormattedText(
+                var formattedText = new FormattedText(
                     placeholderValue,
                     CultureInfo.CurrentCulture,
                     textBox.FlowDirection,
-                    new Typeface(textBox.FontFamily,
-                                 textBox.FontStyle,
-                                 textBox.FontWeight,
-                                 textBox.FontStretch),
+                    typeface,
                     textBox.FontSize,
-                    placeholderBrush,
-                    //SystemColors.InactiveCaptionBrush,
-                    VisualTreeHelper.GetDpi(textBox).PixelsPerDip);
-
-                var rect = textBox.GetRectFromCharacterIndex(0, true);
-
-                if (rect != Rect.Empty)
+                    foreground,
+                    VisualTreeHelper.GetDpi(textBox).PixelsPerDip)
                 {
-                    drawingContext.DrawText(text, new Point(rect.Left, rect.Top));
-                }
-                else
+                    MaxTextWidth = Math.Max(1, textBox.ActualWidth - textBox.Padding.Left - textBox.Padding.Right - 4),
+                };
+
+                //var availableWidth = textBox.ActualWidth - textBox.Padding.Left - textBox.Padding.Right - textBox.BorderThickness.Left - textBox.BorderThickness.Right - 4;
+                var availableHeight = textBox.ActualHeight - textBox.Padding.Top - textBox.Padding.Bottom - textBox.BorderThickness.Top - textBox.BorderThickness.Bottom;
+
+                //var left = textBox.HorizontalContentAlignment switch
+                //{
+                //    HorizontalAlignment.Center => textBox.BorderThickness.Left + textBox.Padding.Left + 2 + (availableWidth - formattedText.Width) / 2,
+                //    HorizontalAlignment.Right => textBox.ActualWidth - textBox.BorderThickness.Right - textBox.Padding.Right - 2 - formattedText.Width,
+                //    _ => textBox.BorderThickness.Left + textBox.Padding.Left + 2
+                //};
+                var top = textBox.VerticalContentAlignment switch
                 {
-                    drawingContext.DrawText(text, new Point(textBox.Padding.Left + 3, textBox.Padding.Top));
-                }
+                    VerticalAlignment.Top => textBox.BorderThickness.Top + textBox.Padding.Top,
+                    VerticalAlignment.Bottom => textBox.ActualHeight - textBox.BorderThickness.Bottom - textBox.Padding.Bottom - formattedText.Height,
+                    _ => textBox.BorderThickness.Top + textBox.Padding.Top + (availableHeight - formattedText.Height) / 2,
+                };
+
+                drawingContext.PushClip(new RectangleGeometry(new Rect(0, 0, textBox.ActualWidth, textBox.ActualHeight)));
+                drawingContext.DrawText(formattedText, new Point(0, top));
+                drawingContext.Pop();
             }
         }
     }
