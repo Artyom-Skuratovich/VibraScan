@@ -1,5 +1,4 @@
 ﻿using System.Xml;
-using VibraScan.Application.DataImport;
 
 namespace VibraScan.Infrastructure.DataImport.StartImport
 {

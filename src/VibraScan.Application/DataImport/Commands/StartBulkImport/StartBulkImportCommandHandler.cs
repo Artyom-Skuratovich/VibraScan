@@ -11,14 +11,14 @@ namespace VibraScan.Application.DataImport.Commands.StartBulkImport
         {
             var sources = request.Sources.ToList();
             var details = new List<ImportResult>(sources.Count);
-            var processedCount = 0;
+            var currentIndex = 0;
 
             for (int i = 0; i < sources.Count; i++)
             {
                 if (ct.IsCancellationRequested) break;
 
-                processedCount = i + 1;
-                request.OverallProgress.Report(new BulkImportProgress(processedCount, sources.Count, $"Обработка данных источника: '{sources[i].Name}'"));
+                currentIndex = i + 1;
+                request.OverallProgress.Report(new BulkImportProgress(currentIndex, sources.Count, $"Обработка данных источника: '{sources[i].Name}'"));
 
                 var result = await _mediator.Send(new StartImportCommand
                 {
@@ -29,12 +29,11 @@ namespace VibraScan.Application.DataImport.Commands.StartBulkImport
                 details.Add(result);
             }
 
-            request.OverallProgress.Report(new BulkImportProgress(processedCount, sources.Count, "Обработка данных завершена"));
+            request.OverallProgress.Report(new BulkImportProgress(currentIndex, sources.Count, "Обработка данных завершена"));
 
             return new BulkImportResult
             {
                 Details = details.AsReadOnly(),
-                TotalProcessed = details.Sum(d => d.ProcessedEntitiesCount),
                 AllSucceeded = !details.Any(d => !d.IsSuccess)
             };
         }
