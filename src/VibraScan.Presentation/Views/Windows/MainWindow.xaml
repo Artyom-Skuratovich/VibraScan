@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:VibraScan.Presentation.Views.Windows"
         xmlns:ctrls="clr-namespace:VibraScan.Presentation.Views"
         xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
-        xmlns:h="clr-namespace:VibraScan.Presentation.Infrastructure.Helpers"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}"
         Title="MainWindow" Height="450" Width="800">
@@ -16,19 +15,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Ok" IsEnabled="True"/>
-            <Button Content="Yes" IsEnabled="True" Style="{StaticResource PrimaryButtonStyle}"/>
-            <TextBox h:TextBoxHelper.Placeholder="Введите текст..." Width="200" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        </StackPanel>
-
         <TabControl Grid.Row="1" Margin="5">
             <TabItem Header="Графики">
-
-                <!--<ctrls:ChartsView DataContext="{Binding ChartsVm}"/>-->
+                <ctrls:ChartsView DataContext="{Binding ChartsVm}"/>
             </TabItem>
             <TabItem Header="Общая информация">
-                <!--<ctrls:EngineManagerView/>-->
+                <ctrls:EngineManagerView/>
             </TabItem>
         </TabControl>
     </Grid>

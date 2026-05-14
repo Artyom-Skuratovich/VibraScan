@@ -57,7 +57,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Foreground="White">
                     <Grid Margin="30">
                         <Grid.Resources>
-                            <Style TargetType="TextBlock" BasedOn="{StaticResource FieldHeaderStyle}">
+                            <Style TargetType="TextBlock">
                                 <Setter Property="Foreground" Value="#ADB5BD"/>
                             </Style>
                         </Grid.Resources>
@@ -90,19 +90,19 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0" Text="Цех"/>
-                        <ComboBox Grid.Row="2" Style="{StaticResource DarkComboBoxStyle}"/>
+                        <ComboBox Grid.Row="2"/>
 
                         <TextBlock Grid.Row="4" Text="Двигатель"/>
-                        <ComboBox Grid.Row="6" Style="{StaticResource DarkComboBoxStyle}"/>
+                        <ComboBox Grid.Row="6"/>
 
                         <TextBlock Grid.Row="8" Text="Точка измерения"/>
-                        <ComboBox Grid.Row="10" Style="{StaticResource DarkComboBoxStyle}"/>
+                        <ComboBox Grid.Row="10"/>
 
                         <TextBlock Grid.Row="12" Text="Ось"/>
-                        <ComboBox Grid.Row="14" Style="{StaticResource DarkComboBoxStyle}"/>
+                        <ComboBox Grid.Row="14"/>
 
                         <TextBlock Grid.Row="16" Text="Параметр"/>
-                        <ComboBox Grid.Row="18" Style="{StaticResource DarkComboBoxStyle}"/>
+                        <ComboBox Grid.Row="18"/>
                     </Grid>
                 </ScrollViewer>
             </DockPanel>
@@ -117,7 +117,7 @@
                     HorizontalAlignment="Left" 
                     VerticalAlignment="Top"
                     Margin="15"
-                    Visibility="{Binding IsChartsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Visibility="{Binding IsChartsVisible, Converter={StaticResource BoolToVis}}">
 
                 <Border.Style>
                     <Style TargetType="Border">
@@ -149,13 +149,10 @@
                         <DockPanel Margin="10,0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding SelectedEngine.Name, FallbackValue='Двигатель не выбран'}"
-                                           Style="{StaticResource FieldHeaderStyle}"
                                            VerticalAlignment="Center" FontWeight="Bold" Foreground="#495057"/>
                                 <TextBlock Text=": "
-                                           Style="{StaticResource FieldHeaderStyle}"
                                            FontWeight="Bold" Foreground="#495057"/>
                                 <TextBlock Text="{Binding SelectedMeasurementDate, StringFormat='{}{0:dd.MM.yyyy}', FallbackValue='--.--.----'}"
-                                           Style="{StaticResource FieldHeaderStyle}"
                                            FontWeight="Bold" Foreground="#495057"/>
                             </StackPanel>
 
@@ -202,13 +199,11 @@
                         </Grid.RowDefinitions>
 
                         <StackPanel Grid.Row="0" Margin="0,15,0,10" HorizontalAlignment="Center">
-                            <TextBlock Style="{StaticResource FieldHeaderStyle}"
-                                       Text="Дата замера"
+                            <TextBlock Text="Дата замера"
                                        Foreground="#6C757D"
                                        Margin="0,0,0,5"/>
 
-                            <ComboBox Style="{StaticResource DarkComboBoxStyle}"
-                                      ItemsSource="{Binding MeasurementDates}"
+                            <ComboBox ItemsSource="{Binding MeasurementDates}"
                                       SelectedItem="{Binding SelectedMeasurementDate}"
                                       Width="200">
 
