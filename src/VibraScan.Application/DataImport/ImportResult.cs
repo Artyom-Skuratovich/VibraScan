@@ -18,31 +18,21 @@
 
         public string SourceName { get; init; } = string.Empty;
 
-        public int ProcessedEntitiesCount { get; init; }
-
         public ImportError? Error { get; init; }
 
-        public static ImportResult Success(int count, string sourceName) => new()
+        public static ImportResult Success(string sourceName) => new()
         {
             IsSuccess = true,
             Message = "Импорт успешно завершён",
-            ProcessedEntitiesCount = count,
             SourceName = sourceName
         };
 
-        public static ImportResult Failure(
-            string summary,
-            string detail,
-            ImportErrorType errorType,
-            int processedBeforeError,
-            string sourceName,
-            string? stackTrace = null) => new()
-            {
-                IsSuccess = false,
-                Message = summary,
-                ProcessedEntitiesCount = processedBeforeError,
-                Error = new ImportError(detail, errorType, stackTrace),
-                SourceName = sourceName
-            };
+        public static ImportResult Failure(string message, string error, ImportErrorType errorType, string sourceName, string? stackTrace = null) => new()
+        {
+            IsSuccess = false,
+            Message = message,
+            Error = new ImportError(error, errorType, stackTrace),
+            SourceName = sourceName
+        };
     }
 }
