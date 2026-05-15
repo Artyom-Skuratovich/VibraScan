@@ -28,7 +28,7 @@
                                    FontSize="16" FontWeight="SemiBold" Foreground="#334155"/>
                         <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                             <TextBlock Text="Цех:" VerticalAlignment="Center" Foreground="#64748B" FontSize="12"/>
-                            <ComboBox Style="{StaticResource UnderlineComboBox}"
+                            <ComboBox Style="{StaticResource UnderlinedComboBox}"
                                       Tag="-- Выберите цех --"
                                       Width="150" 
                                       Height="28" 
@@ -78,16 +78,23 @@
                                 <!-- Кнопка -->
                             </Grid.ColumnDefinitions>
 
-                            <!-- Название -->
                             <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                                <TextBlock Text="Название" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8" Margin="0,0,0,4"/>
-                                <TextBox Height="30" VerticalContentAlignment="Center"/>
+                                <TextBlock Text="Название" 
+                                           FontSize="11" 
+                                           FontWeight="SemiBold" 
+                                           Foreground="#94A3B8" 
+                                           Margin="0,0,0,4"/>
+                                <TextBox Style="{StaticResource UnderlinedTextBox}"
+                                         Tag="-- Введите название --"/>
                             </StackPanel>
 
-                            <!-- Состояние -->
                             <StackPanel Grid.Column="1" Margin="0,0,12,0">
-                                <TextBlock Text="Состояние" FontSize="11" FontWeight="SemiBold" Foreground="#94A3B8" Margin="0,0,0,4"/>
-                                <ComboBox Style="{StaticResource UnderlineComboBox}"
+                                <TextBlock Text="Состояние" 
+                                           FontSize="11" 
+                                           FontWeight="SemiBold" 
+                                           Foreground="#94A3B8" 
+                                           Margin="0,0,0,4"/>
+                                <ComboBox Style="{StaticResource UnderlinedComboBox}"
                                           Tag="-- Выберите состояние --"
                                           Height="30"/>
                             </StackPanel>
