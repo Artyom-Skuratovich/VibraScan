@@ -44,16 +44,17 @@
                     </StackPanel>
 
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom">
-                        <ToggleButton x:Name="MultiSelectToggle"
-                                      Height="30" Padding="10,0" Margin="0,0,0,0">
+                        <ToggleButton Style="{StaticResource SecondaryToggleButton}"
+                                      x:Name="MultiSelectToggle">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="&#xE762;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                 <TextBlock Text="Выделить несколько" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
                         </ToggleButton>
 
-                        <Button Content="Действия" Margin="8,0,0,0" Height="30" Padding="15,0"
-                                Background="#2563EB" Foreground="White" BorderThickness="0"
+                        <Button Style="{StaticResource PrimaryButton}"
+                                Content="Действия" 
+                                Margin="8,0,0,0"
                                 Visibility="{Binding IsChecked, ElementName=MultiSelectToggle, Converter={StaticResource BoolToVis}}">
                             <Button.RenderTransform>
                                 <TranslateTransform X="0"/>
