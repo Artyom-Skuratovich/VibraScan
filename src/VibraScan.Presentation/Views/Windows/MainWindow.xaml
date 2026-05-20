@@ -15,12 +15,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TabControl Grid.Row="1" Margin="5">
+        <TabControl Grid.Row="1" Style="{StaticResource FluentTabControl}">
             <TabItem Header="Графики">
                 <ctrls:ChartsView DataContext="{Binding ChartsVm}"/>
             </TabItem>
-            <TabItem Header="Общая информация">
-                <ctrls:EngineManagerView/>
+            <TabItem Header="Мониторинг">
+                <ctrls:MonitoringView DataContext="{Binding MonitoringVm}"/>
             </TabItem>
         </TabControl>
     </Grid>

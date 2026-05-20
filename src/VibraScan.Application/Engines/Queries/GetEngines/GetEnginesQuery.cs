@@ -7,6 +7,8 @@ namespace VibraScan.Application.Engines.Queries.GetEngines
         long WorkshopId,
         string? SearchTerm = null,
         Condition? Condition = null,
-        DateTime? LastInspectionFrom = null,
-        DateTime? LastInspectionTo = null) : IRequest<IEnumerable<EngineBriefDto>>;
+        DateTime? InspectionFrom = null,
+        DateTime? InspectionTo = null,
+        InspectionDateType DateType = InspectionDateType.LastInspection,
+        InspectionStatusFilter InspectionStatus = InspectionStatusFilter.All) : IRequest<IEnumerable<EngineBriefDto>>;
 }
