@@ -257,6 +257,7 @@
                             </StackPanel>
 
                             <Button Style="{StaticResource FluentPrimaryButton}" 
+                                    Command="{Binding LoadEnginesCommand}"
                                     Grid.Column="4" 
                                     VerticalAlignment="Bottom"
                                     Padding="24,0">

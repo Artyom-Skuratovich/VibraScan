@@ -17,11 +17,9 @@ namespace VibraScan.Presentation.ViewModels
         {
             public Condition? Value { get; } = condition;
 
-            public string DisplayName { get; } = condition?.Description ?? "Все состояния";
-
             public override string ToString()
             {
-                return DisplayName;
+                return Value?.Description ?? "Все состояния";
             }
         }
 
@@ -102,9 +100,8 @@ namespace VibraScan.Presentation.ViewModels
                     return;
                 }
 
-                ResetFilters();
-
-                var engines = await _commandDispatcher.SendAsync(new GetEnginesQuery(CurrentWorkshop.Id), ct);
+                var query = new GetEnginesQuery(CurrentWorkshop.Id, SearchText, SelectedCondition.Value, DateFrom, DateTo, SelectedDateType, SelectedInspectionFilter);
+                var engines = await _commandDispatcher.SendAsync(query, ct);
                 Engines.Clear();
 
                 foreach (var engine in engines)
@@ -133,6 +130,7 @@ namespace VibraScan.Presentation.ViewModels
             if (_isInitialized) return;
 
             await LoadWorkshopsCommand.ExecuteAsync(ct);
+            ResetFilters();
 
             _isInitialized = true;
         }
