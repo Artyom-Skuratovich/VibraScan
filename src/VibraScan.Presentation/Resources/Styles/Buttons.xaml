@@ -1,130 +1,146 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="FluentButtonBase" TargetType="{x:Type ButtonBase}">
-        <Setter Property="MinHeight" Value="35"/>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="FontWeight" Value="Medium"/>
-        <Setter Property="Padding" Value="12,6"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="MinHeight" Value="35" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
-                    <Border x:Name="ButtonWrapper"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5">
+                    <Border
+                        x:Name="ButtonWrapper"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="5">
 
-                        <ContentPresenter x:Name="PART_ContentPresenter"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                        <ContentPresenter
+                            x:Name="PART_ContentPresenter"
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            TextBlock.Foreground="{TemplateBinding Foreground}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style x:Key="FluentPrimaryButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource FluentButtonBase}">
-        <Setter Property="Background" Value="#2563EB"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderThickness" Value="0"/>
+    <Style
+        x:Key="FluentPrimaryButton"
+        BasedOn="{StaticResource FluentButtonBase}"
+        TargetType="{x:Type ButtonBase}">
+        <Setter Property="Background" Value="#2563EB" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#1D4ED8"/>
+                <Setter Property="Background" Value="#1D4ED8" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="#1E40AF"/>
+                <Setter Property="Background" Value="#1E40AF" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="#EFF6FF"/>
-                <Setter Property="Foreground" Value="#93C5FD"/>
+                <Setter Property="Background" Value="#EFF6FF" />
+                <Setter Property="Foreground" Value="#93C5FD" />
             </Trigger>
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="FluentSecondaryButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource FluentButtonBase}">
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="Foreground" Value="#1E293B"/>
-        <Setter Property="BorderBrush" Value="#475569"/>
-        <Setter Property="BorderThickness" Value="1"/>
+    <Style
+        x:Key="FluentSecondaryButton"
+        BasedOn="{StaticResource FluentButtonBase}"
+        TargetType="{x:Type ButtonBase}">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Foreground" Value="#1E293B" />
+        <Setter Property="BorderBrush" Value="#475569" />
+        <Setter Property="BorderThickness" Value="1" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#F8FAFC"/>
-                <Setter Property="BorderBrush" Value="#1E293B"/>
-                <Setter Property="Foreground" Value="#0F172A"/>
+                <Setter Property="Background" Value="#F8FAFC" />
+                <Setter Property="BorderBrush" Value="#1E293B" />
+                <Setter Property="Foreground" Value="#0F172A" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="#E2E8F0"/>
-                <Setter Property="BorderBrush" Value="#1E293B"/>
+                <Setter Property="Background" Value="#E2E8F0" />
+                <Setter Property="BorderBrush" Value="#1E293B" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="BorderBrush" Value="#F1F5F9"/>
-                <Setter Property="Foreground" Value="#CBD5E1"/>
+                <Setter Property="BorderBrush" Value="#F1F5F9" />
+                <Setter Property="Foreground" Value="#CBD5E1" />
             </Trigger>
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="FluentPrimaryToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource FluentPrimaryButton}">
+    <Style
+        x:Key="FluentPrimaryToggleButton"
+        BasedOn="{StaticResource FluentPrimaryButton}"
+        TargetType="ToggleButton">
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="#1D4ED8"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="#1E40AF"/>
+                <Setter Property="Background" Value="#1D4ED8" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="#1E40AF" />
             </Trigger>
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="FluentSecondaryToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource FluentSecondaryButton}">
+    <Style
+        x:Key="FluentSecondaryToggleButton"
+        BasedOn="{StaticResource FluentSecondaryButton}"
+        TargetType="ToggleButton">
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="#F1F5F9"/>
-                <Setter Property="BorderBrush" Value="#1E293B"/>
-                <Setter Property="Foreground" Value="#2563EB"/>
+                <Setter Property="Background" Value="#F1F5F9" />
+                <Setter Property="BorderBrush" Value="#1E293B" />
+                <Setter Property="Foreground" Value="#2563EB" />
             </Trigger>
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="FluentRadioButton" TargetType="RadioButton" BasedOn="{StaticResource FluentButtonBase}">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#64748B"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Padding" Value="14,0"/>
+    <Style
+        x:Key="FluentRadioButton"
+        BasedOn="{StaticResource FluentButtonBase}"
+        TargetType="RadioButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="#64748B" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="14,0" />
 
         <Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
-                    <Condition Property="IsMouseOver" Value="True"/>
-                    <Condition Property="IsChecked" Value="False"/>
+                    <Condition Property="IsMouseOver" Value="True" />
+                    <Condition Property="IsChecked" Value="False" />
                 </MultiTrigger.Conditions>
-                <Setter Property="Background" Value="#E2E8F0"/>
-                <Setter Property="Foreground" Value="#1E293B"/>
+                <Setter Property="Background" Value="#E2E8F0" />
+                <Setter Property="Foreground" Value="#1E293B" />
             </MultiTrigger>
 
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="White"/>
-                <Setter Property="BorderBrush" Value="#1E293B"/>
-                <Setter Property="Foreground" Value="#2563EB"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Background" Value="White" />
+                <Setter Property="BorderBrush" Value="#1E293B" />
+                <Setter Property="Foreground" Value="#2563EB" />
+                <Setter Property="FontWeight" Value="SemiBold" />
             </Trigger>
 
             <MultiTrigger>
                 <MultiTrigger.Conditions>
-                    <Condition Property="IsMouseOver" Value="True"/>
-                    <Condition Property="IsChecked" Value="True"/>
+                    <Condition Property="IsMouseOver" Value="True" />
+                    <Condition Property="IsChecked" Value="True" />
                 </MultiTrigger.Conditions>
-                <Setter Property="Background" Value="#F8FAFC"/>
+                <Setter Property="Background" Value="#F8FAFC" />
             </MultiTrigger>
 
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="#CBD5E1"/>
-                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="#CBD5E1" />
+                <Setter Property="Background" Value="Transparent" />
             </Trigger>
         </Style.Triggers>
     </Style>

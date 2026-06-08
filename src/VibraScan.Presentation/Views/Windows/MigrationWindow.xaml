@@ -1,47 +1,52 @@
-﻿<Window x:Class="VibraScan.Presentation.Views.Windows.MigrationWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VibraScan.Presentation.Views.Windows"
-        xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
-        mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=vm:MigrationViewModel, IsDesignTimeCreatable=False}"
-        Title="{Binding Title, FallbackValue='Подготовка базы данных'}"
-        ResizeMode="NoResize"
-        SizeToContent="Manual"
-        Height="300" Width="400"
-        WindowStartupLocation="CenterScreen">
+﻿<Window
+    x:Class="VibraScan.Presentation.Views.Windows.MigrationWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:VibraScan.Presentation.Views.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
+    Title="{Binding Title, FallbackValue='Подготовка базы данных'}"
+    Width="400"
+    Height="300"
+    d:DataContext="{d:DesignInstance Type=vm:MigrationViewModel,
+                                     IsDesignTimeCreatable=False}"
+    ResizeMode="NoResize"
+    SizeToContent="Manual"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Resources/DataTemplates/LoadingSpinnerTemplates.xaml"/>
+                <ResourceDictionary Source="../../Resources/DataTemplates/LoadingSpinnerTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
+
     <Grid>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <ContentControl Content="{Binding Spinner}" Margin="0,0,0,30"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <ContentControl Margin="0,0,0,30" Content="{Binding Spinner}" />
 
-            <TextBlock Text="{Binding StatusText, FallbackValue='Выполняются миграции...'}" 
-                       Foreground="Black" 
-                       FontSize="16" 
-                       FontWeight="Light" 
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,15"/>
+            <TextBlock
+                Margin="0,0,0,15"
+                HorizontalAlignment="Center"
+                FontSize="16"
+                FontWeight="Light"
+                Foreground="Black"
+                Text="{Binding StatusText, FallbackValue='Выполняются миграции...'}" />
 
-            <TextBlock Text="Пожалуйста, подождите. Это может занять несколько минут" 
-                       Foreground="#888888" 
-                       HorizontalAlignment="Center" 
-                       TextAlignment="Center"/>
+            <TextBlock
+                HorizontalAlignment="Center"
+                Foreground="#888888"
+                Text="Пожалуйста, подождите. Это может занять несколько минут"
+                TextAlignment="Center" />
         </StackPanel>
     </Grid>
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 </Window>
