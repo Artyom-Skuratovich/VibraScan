@@ -36,11 +36,7 @@
 
             <DockPanel LastChildFill="False">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                    <Button
-                        Height="38"
-                        Padding="24,0"
-                        Content="Выбрать XML файлы"
-                        Style="{StaticResource FluentPrimaryButton}" />
+                    <Button Content="Выбрать XML файлы" Style="{StaticResource FluentPrimaryButton}" />
 
                     <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
                         <TextBlock
@@ -61,17 +57,13 @@
                     DockPanel.Dock="Right"
                     Orientation="Horizontal">
                     <Button
-                        Height="38"
-                        Padding="24,0"
                         Content="Запустить импорт"
                         DockPanel.Dock="Right"
                         FontWeight="SemiBold"
                         Style="{StaticResource FluentPrimaryButton}" />
 
                     <Button
-                        Height="38"
                         Margin="8,0,0,0"
-                        Padding="20,0"
                         Content="Отмена"
                         Style="{StaticResource FluentSecondaryButton}" />
                 </StackPanel>
@@ -171,7 +163,8 @@
                     HorizontalContentAlignment="Stretch"
                     VerticalContentAlignment="Center"
                     Background="Transparent"
-                    BorderThickness="0">
+                    BorderThickness="0"
+                    Grid.IsSharedSizeScope="True">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border
@@ -182,9 +175,9 @@
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="FileNameCol" />
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="StatusCol" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
@@ -200,6 +193,7 @@
 
                                     <TextBlock
                                         Grid.Column="1"
+                                        MaxWidth="300"
                                         VerticalAlignment="Center"
                                         FontSize="13"
                                         FontWeight="Medium"
@@ -222,12 +216,14 @@
 
                                     <TextBlock
                                         Grid.Column="3"
+                                        MaxWidth="150"
                                         Margin="0,0,16,0"
                                         VerticalAlignment="Center"
                                         FontSize="12"
                                         Foreground="#64748B"
                                         Text="{Binding StatusText}"
-                                        TextAlignment="Right" />
+                                        TextAlignment="Left"
+                                        TextTrimming="CharacterEllipsis" />
 
                                     <Button
                                         Grid.Column="4"
