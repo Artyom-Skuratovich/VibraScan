@@ -22,7 +22,7 @@
                 <ctrls:MonitoringView DataContext="{Binding MonitoringVm}" />
             </TabItem>
             <TabItem Header="Импорт">
-                <ctrls:DataImportView />
+                <ctrls:DataImportView DataContext="{Binding DataImportVm}"/>
             </TabItem>
         </TabControl>
     </Grid>

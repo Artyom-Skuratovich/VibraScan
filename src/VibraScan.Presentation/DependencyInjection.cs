@@ -14,8 +14,8 @@ namespace VibraScan.Presentation
         public static void AddPresentationServices(this IServiceCollection services)
         {
             services.AddSingleton<IClipboardService, ClipboardService>();
-
             services.AddSingleton<IErrorVisualizerService, ErrorVisualizerService>();
+            services.AddSingleton<IFileDialogService, FileDialogService>();
 
             services.AddSingleton<Func<CancellationToken, Task>>(sp =>
             {
@@ -34,6 +34,7 @@ namespace VibraScan.Presentation
 
             services.AddTransient<ChartsViewModel>();
             services.AddTransient<MonitoringViewModel>();
+            services.AddTransient<DataImportViewModel>();
 
             services.AddSingleton<IWindowService>(sp =>
             {

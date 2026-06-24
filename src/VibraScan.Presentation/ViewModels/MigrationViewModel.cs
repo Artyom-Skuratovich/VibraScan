@@ -7,7 +7,7 @@ using VibraScan.Presentation.ViewModels.Models;
 namespace VibraScan.Presentation.ViewModels
 {
     public partial class MigrationViewModel(IWindowService windowService, IErrorVisualizerService errorVisualizerService, Func<CancellationToken, Task> migrationRunner)
-        : ObservableObject, ISupportCancellation
+        : ObservableObject, ICancellable
     {
         private readonly IWindowService _windowService = windowService;
         private readonly IErrorVisualizerService _errorVisualizerService = errorVisualizerService;

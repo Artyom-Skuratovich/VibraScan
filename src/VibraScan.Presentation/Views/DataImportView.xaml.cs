@@ -10,8 +10,8 @@ namespace VibraScan.Presentation.Views
         public DataImportView()
         {
             InitializeComponent();
-            TestListBox.Items.Add(new { FileName = "vessel_data.xml", StatusText = "Чтение...", IsRemovable = true, IsFaulted = true });
-            TestListBox.Items.Add(new { FileName = "C:\\Users\\Admin\\Downloads\\vbX to Ascent\\vbX - 5A - 2025-12-03 14-56-53.xml", StatusText = "Готово", IsRemovable = false, IsFaulted = false });
+            //TestListBox.Items.Add(new { FileName = "vessel_data.xml", StatusText = "Чтение...", IsRemovable = true, IsFaulted = true });
+            //TestListBox.Items.Add(new { FileName = "C:\\Users\\Admin\\Downloads\\vbX to Ascent\\vbX - 5A - 2025-12-03 14-56-53.xml", StatusText = "Готово", IsRemovable = false, IsFaulted = false });
         }
     }
 }

@@ -131,7 +131,7 @@ namespace VibraScan.Presentation.Services
 
         private void ConfigureWindowLifeCycle(Window window, object model)
         {
-            if (model is ISupportCancellation cancelable)
+            if (model is ICancellable cancelable)
             {
                 window.Closing += (s, e) => cancelable.Cancel();
             }

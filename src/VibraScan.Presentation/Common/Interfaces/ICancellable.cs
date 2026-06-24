@@ -1,6 +1,6 @@
 ﻿namespace VibraScan.Presentation.Common.Interfaces
 {
-    public interface ISupportCancellation
+    public interface ICancellable
     {
         void Cancel();
     }

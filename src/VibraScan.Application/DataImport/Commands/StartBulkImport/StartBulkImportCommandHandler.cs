@@ -11,14 +11,14 @@ namespace VibraScan.Application.DataImport.Commands.StartBulkImport
         {
             var sources = request.Sources.ToList();
             var details = new List<ImportResult>(sources.Count);
-            var currentIndex = 0;
+            var currentNumber = 0;
 
             for (int i = 0; i < sources.Count; i++)
             {
                 if (ct.IsCancellationRequested) break;
 
-                currentIndex = i + 1;
-                request.OverallProgress.Report(new BulkImportProgress(currentIndex, sources.Count, $"Обработка данных источника: '{sources[i].Name}'"));
+                currentNumber = i + 1;
+                request.OverallProgress.Report(new BulkImportProgress(currentNumber, sources.Count, $"Обработка данных источника: '{sources[i].Name}'"));
 
                 var result = await _mediator.Send(new StartImportCommand
                 {
@@ -27,9 +27,11 @@ namespace VibraScan.Application.DataImport.Commands.StartBulkImport
                 }, ct);
 
                 details.Add(result);
+
+                request.OverallProgress.Report(new BulkImportProgress(currentNumber, sources.Count, $"Источник '{sources[i].Name}' обработан", result.Error));
             }
 
-            request.OverallProgress.Report(new BulkImportProgress(currentIndex, sources.Count, "Обработка данных завершена"));
+            request.OverallProgress.Report(new BulkImportProgress(currentNumber, sources.Count, "Обработка данных завершена"));
 
             return new BulkImportResult
             {

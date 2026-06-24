@@ -11,7 +11,7 @@ using VibraScan.Presentation.Services.Interfaces;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class MonitoringViewModel(IErrorVisualizerService errorVisualizer, ICommandDispatcher commandDispatcher) : ObservableObject, ISupportCancellation
+    public partial class MonitoringViewModel(IErrorVisualizerService errorVisualizer, ICommandDispatcher commandDispatcher) : ObservableObject, ICancellable
     {
         public class ConditionFilterItem(Condition? condition)
         {
