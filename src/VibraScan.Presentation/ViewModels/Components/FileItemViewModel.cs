@@ -22,12 +22,16 @@ namespace VibraScan.Presentation.ViewModels.Components
 
         public string FullPath { get; set; } = null!;
 
-        public void ResetToDefault()
+        public void ResetToDefault(bool includeError = true)
         {
             ImportPercentage = 0;
             Stage = DefaultStage;
-            Error = null;
             IsExpanded = false;
+
+            if (includeError)
+            {
+                Error = null;
+            }
         }
 
         [RelayCommand]
