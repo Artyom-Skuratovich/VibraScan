@@ -46,13 +46,46 @@
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap" />
 
-                    <TextBlock
-                        Margin="0,10,0,0"
-                        HorizontalAlignment="Center"
-                        FontSize="10"
-                        FontWeight="Medium"
-                        Foreground="#64748B"
-                        Text="{Binding Engine.LastInspectionDate, StringFormat={}{0:dd.MM.yyyy}}" />
+                    <Grid Margin="0,10,0,0" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            FontSize="10"
+                            FontWeight="Medium"
+                            Foreground="#64748B"
+                            Text="Пров.: " />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            FontSize="10"
+                            Foreground="#334155"
+                            Text="{Binding Engine.LastInspectionDate, StringFormat={}{0:dd.MM.yyyy}, TargetNullValue=--.--.----}" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            FontSize="10"
+                            FontWeight="Medium"
+                            Foreground="#64748B"
+                            Text="След.: " />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            FontSize="10"
+                            Foreground="#334155"
+                            Text="{Binding Engine.NextInspectionDate, StringFormat={}{0:dd.MM.yyyy}, TargetNullValue=--.--.----}" />
+                    </Grid>
                 </StackPanel>
 
                 <CheckBox
