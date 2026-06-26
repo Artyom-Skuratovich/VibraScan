@@ -7,16 +7,22 @@
         <Setter Property="Foreground" Value="#2563EB" />
 
         <Style.Triggers>
-            <EventTrigger RoutedEvent="ProgressBar.ValueChanged">
-                <BeginStoryboard x:Name="SmoothProgressStoryboard">
-                    <Storyboard>
-                        <DoubleAnimation
-                            DecelerationRatio="0.2"
-                            Storyboard.TargetProperty="Value"
-                            Duration="0:0:0.3" />
-                    </Storyboard>
-                </BeginStoryboard>
-            </EventTrigger>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Value}" Value="0">
+                <DataTrigger.EnterActions>
+                    <StopStoryboard BeginStoryboardName="SmoothProgressStoryboard" />
+                </DataTrigger.EnterActions>
+
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard x:Name="SmoothProgressStoryboard">
+                        <Storyboard>
+                            <DoubleAnimation
+                                DecelerationRatio="0.2"
+                                Storyboard.TargetProperty="Value"
+                                Duration="0:0:0.3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
+            </DataTrigger>
         </Style.Triggers>
     </Style>
 
