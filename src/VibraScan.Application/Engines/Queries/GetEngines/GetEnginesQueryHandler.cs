@@ -18,7 +18,8 @@ namespace VibraScan.Application.Engines.Queries.GetEngines
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
-                query = query.Where(e => e.Name.Contains(request.SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+                var term = request.SearchTerm.ToLower();
+                query = query.Where(e => e.Name.ToLower().Contains(term));
             }
 
             if (request.Condition is not null)

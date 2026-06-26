@@ -163,7 +163,7 @@
                                 <TextBox
                                     Style="{StaticResource FluentTextBox}"
                                     Tag="-- Введите название --"
-                                    Text="{Binding SearchText}" />
+                                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Margin="0,0,16,0">
@@ -395,7 +395,7 @@
 
         <ScrollViewer
             Grid.Row="1"
-            HorizontalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
             <ItemsControl Margin="20" ItemsSource="{Binding Engines}">
                 <ItemsControl.ItemsPanel>
@@ -415,7 +415,6 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <!--  3. СТРОКА СОСТОЯНИЯ  -->
         <Border
             Grid.Row="2"
             Padding="20,10"
