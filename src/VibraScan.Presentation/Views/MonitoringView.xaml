@@ -181,26 +181,6 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="2" Margin="0,0,16,0">
-                                <!--<TextBlock Text="Последняя проверка"
-                                       FontSize="12"
-                                       FontWeight="Medium"
-                                       Foreground="#64748B"
-                                       Margin="2,0,0,6"/>-->
-
-                                <!--<ComboBox Background="Transparent"
-                                          BorderThickness="0"
-                                          FontSize="12"
-                                          FontWeight="Medium"
-                                          Foreground="#64748B"
-                                          HorizontalAlignment="Left"
-                                          Margin="0,0,0,6"
-                                          Padding="2,0,0,0"
-                                          SelectedValue="{Binding SelectedDateType}"
-                                          SelectedValuePath="Tag">
-                                    <ComboBoxItem Content="Последняя проверка" Tag="{x:Static ges:InspectionDateType.LastInspection}"/>
-                                    <ComboBoxItem Content="Следующая проверка" Tag="{x:Static ges:InspectionDateType.NextInspection}"/>
-                                </ComboBox>-->
-
                                 <ComboBox
                                     Margin="2,0,0,6"
                                     HorizontalAlignment="Left"
