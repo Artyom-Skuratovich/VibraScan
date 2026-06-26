@@ -30,6 +30,7 @@ namespace VibraScan.Presentation.ViewModels
 
         [ObservableProperty] private ObservableCollection<Workshop> _workshops = [];
         [ObservableProperty] private ObservableCollection<EngineBriefViewModel> _engines = [];
+        [ObservableProperty] private string _lastUpdatedTime = "--:--";
         [ObservableProperty] private Workshop? _currentWorkshop;
         [ObservableProperty] private string? _searchText;
         [ObservableProperty] private DateTime? _dateFrom;
@@ -38,6 +39,8 @@ namespace VibraScan.Presentation.ViewModels
         [ObservableProperty] private InspectionDateType _selectedDateType = InspectionDateType.LastInspection;
         [ObservableProperty] private ConditionFilterItem _selectedCondition = null!;
         [ObservableProperty] private bool _isWorkshopSelected;
+
+        public int UrgentCheckCount => Engines.Count(e => e.Engine.NextInspectionDate.HasValue && e.Engine.NextInspectionDate <= DateTime.Today);
 
         public IEnumerable<ConditionFilterItem> AvailableConditions { get; } = [
             new(null),
@@ -113,6 +116,9 @@ namespace VibraScan.Presentation.ViewModels
 
                     Engines.Add(vm);
                 }
+
+                OnPropertyChanged(nameof(UrgentCheckCount));
+                LastUpdatedTime = DateTime.Now.ToString(@"dd.MM.yyyy \в HH:mm");
             }
             catch (OperationCanceledException)
             {

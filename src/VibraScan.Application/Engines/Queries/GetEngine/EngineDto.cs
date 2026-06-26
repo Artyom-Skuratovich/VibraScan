@@ -6,6 +6,8 @@ namespace VibraScan.Application.Engines.Queries.GetEngine
 {
     public class EngineDto
     {
+        public long Id { get; set; }
+
         public string Name { get; set; } = null!;
 
         public Condition Condition { get; set; } = null!;

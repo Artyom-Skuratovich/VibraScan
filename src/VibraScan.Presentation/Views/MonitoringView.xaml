@@ -426,19 +426,19 @@
                     <TextBlock
                         FontSize="12"
                         Foreground="#64748B"
-                        Text="Всего объектов: 48" />
+                        Text="{Binding Engines.Count, StringFormat='Всего двигателей: {0}'}" />
                     <Separator Margin="15,2" Background="#E2E8F0" />
                     <TextBlock
                         FontSize="12"
                         FontWeight="SemiBold"
                         Foreground="#EF4444"
-                        Text="Требуют срочной проверки: 5" />
+                        Text="{Binding UrgentCheckCount, StringFormat='Требуют срочной проверки: {0}'}" />
                 </StackPanel>
                 <TextBlock
                     DockPanel.Dock="Right"
                     FontSize="12"
                     Foreground="#94A3B8"
-                    Text="Обновлено: 15:30" />
+                    Text="{Binding LastUpdatedTime, StringFormat='Обновлено: {0}'}" />
             </DockPanel>
         </Border>
     </Grid>
