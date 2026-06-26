@@ -162,7 +162,7 @@ namespace VibraScan.Presentation.ViewModels
 
                 foreach (var source in sources)
                 {
-                    source.Data?.Dispose();
+                    await source.Data.DisposeAsync();
                 }
 
                 if (ct.IsCancellationRequested)

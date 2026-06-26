@@ -42,7 +42,7 @@ namespace VibraScan.Presentation.Common.Helpers
 
             if (e.OldValue is INotifyCollectionChanged oldCollection)
             {
-                oldCollection.CollectionChanged -= (s, e) => HandleCollectionChanged(rtb, e);
+                oldCollection.CollectionChanged -= rtb.OnCollectionChanged;
             }
 
             if (e.NewValue is INotifyCollectionChanged newCollection)
@@ -60,7 +60,7 @@ namespace VibraScan.Presentation.Common.Helpers
                     }
                 }
 
-                newCollection.CollectionChanged += (s, e) => HandleCollectionChanged(rtb, e);
+                newCollection.CollectionChanged += rtb.OnCollectionChanged;
             }
         }
 
@@ -84,16 +84,14 @@ namespace VibraScan.Presentation.Common.Helpers
                 case NotifyCollectionChangedAction.Remove:
                     if ((e.OldItems != null) && (rtb.Document.Blocks.Count > 0))
                     {
-                        var startIndex = e.OldStartingIndex;
-                        var countToRemove = e.OldItems.Count;
+                        var blocksToRemove = rtb.Document.Blocks
+                            .Skip(e.OldStartingIndex)
+                            .Take(e.OldItems.Count)
+                            .ToArray();
 
-                        for (int i = startIndex + countToRemove - 1; i >= startIndex; i--)
+                        for (int i = 0; i < blocksToRemove.Length; i++)
                         {
-                            if ((i >= 0) && (i < rtb.Document.Blocks.Count))
-                            {
-                                var blockToRemove = rtb.Document.Blocks.ElementAt(i);
-                                rtb.Document.Blocks.Remove(blockToRemove);
-                            }
+                            rtb.Document.Blocks.Remove(blocksToRemove[i]);
                         }
                     }
                     break;
@@ -159,6 +157,11 @@ namespace VibraScan.Presentation.Common.Helpers
             }
 
             return section;
+        }
+
+        private static void OnCollectionChanged(this RichTextBox rtb, object? _, NotifyCollectionChangedEventArgs e)
+        {
+            HandleCollectionChanged(rtb, e);
         }
     }
 }
