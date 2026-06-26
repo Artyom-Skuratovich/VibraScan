@@ -42,7 +42,7 @@ namespace VibraScan.Infrastructure.Data.Bulk
 
             var type = typeof(T);
 
-            var uniqueIdxProps = s_indexes.GetOrAdd(type, _ => GetUniqueIndexProperties(type));
+            var uniqueIdxProps = s_indexes.GetOrAdd(type, GetUniqueIndexProperties);
 
             if ((uniqueIdxProps == null) || (uniqueIdxProps.Count == 0))
             {
@@ -239,7 +239,7 @@ namespace VibraScan.Infrastructure.Data.Bulk
 
             if (string.IsNullOrEmpty(updateSet))
             {
-                updateSet = $"T.[{uniqueIdxProps.First()}]=T.[{uniqueIdxProps.First()}]";
+                updateSet = $"T.[{uniqueIdxProps[0]}]=T.[{uniqueIdxProps[0]}]";
             }
 
             sb.Append("MERGE ").Append(targetTable).Append($" AS T USING {sourceTable} AS S ON ").Append(joinCondition)
@@ -370,7 +370,7 @@ namespace VibraScan.Infrastructure.Data.Bulk
             }
         }
 
-        private record ColumnDefinition(
+        private sealed record ColumnDefinition(
             string ColumnName,
             Type DbType,
             PropertyInfo? PropertyInfo,

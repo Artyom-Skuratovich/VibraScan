@@ -36,7 +36,9 @@ namespace VibraScan.Infrastructure.DataImport.StartImport
                             progress.Report(new ImportProgress(CalculateProgress(collCount), $"Обработка коллекции {entityName}..."));
                             await ProcessCurrentEntitiesAsync(reader, processor, context, ct);
 
-                            progress.Report(new ImportProgress(CalculateProgress(collCount += ProcessingRatio), $"Отправка коллекции {entityName} в БД"));
+                            collCount += ProcessingRatio;
+                            progress.Report(new ImportProgress(CalculateProgress(collCount), $"Отправка коллекции {entityName} в БД"));
+
                             await processor.CommitAsync(context, ct);
                             collCount += CommitRatio;
                         }
