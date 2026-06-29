@@ -13,14 +13,12 @@
     d:DesignWidth="1920"
     mc:Ignorable="d">
 
-    <!--  Основная сетка: Левый сайдбар (260px) и правая рабочая область (*)  -->
     <Grid Background="#F1F5F9">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260" />
+            <ColumnDefinition Width="280" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!--  ================= ЛЕВАЯ ПАНЕЛЬ С КАСКАДОМ COMBOBOX =================  -->
         <Border
             Grid.Column="0"
             Padding="20,24"
@@ -28,98 +26,94 @@
             BorderBrush="#E2E8F0"
             BorderThickness="0,0,1,0">
 
-            <StackPanel>
-                <TextBlock
-                    Margin="0,0,0,4"
-                    FontSize="16"
-                    FontWeight="SemiBold"
-                    Foreground="#0F172A"
-                    Text="Вибродиагностика" />
-                <TextBlock
-                    Margin="0,0,0,24"
-                    FontSize="12"
-                    Foreground="#64748B"
-                    Text="Параметры анализа сигнала" />
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
 
-                <!--  1. Цех  -->
-                <StackPanel Margin="0,0,0,16">
+                <StackPanel>
                     <TextBlock
-                        Margin="2,0,0,6"
-                        FontSize="11"
-                        FontWeight="Medium"
-                        Foreground="#475569"
-                        Text="Цех" />
-                    <ComboBox
-                        ItemsSource="{Binding Workshops}"
-                        SelectedItem="{Binding CurrentWorkshop}"
-                        Style="{StaticResource FluentComboBox}"
-                        Tag="-- Выберите цех --" />
-                </StackPanel>
+                        Margin="0,0,0,4"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="#0F172A"
+                        Text="Вибродиагностика" />
+                    <TextBlock
+                        Margin="0,0,0,24"
+                        FontSize="12"
+                        Foreground="#64748B"
+                        Text="Параметры анализа сигнала" />
 
-                <!--  2. Двигатель  -->
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock
-                        Margin="2,0,0,6"
-                        FontSize="11"
-                        FontWeight="Medium"
-                        Foreground="#475569"
-                        Text="Двигатель" />
-                    <ComboBox
-                        ItemsSource="{Binding Engines}"
-                        SelectedItem="{Binding SelectedEngine}"
-                        Style="{StaticResource FluentComboBox}"
-                        Tag="-- Выберите двигатель --" />
-                </StackPanel>
+                    <StackPanel Margin="0,0,0,24">
+                        <TextBlock
+                            Margin="2,0,0,6"
+                            FontSize="11"
+                            FontWeight="Medium"
+                            Foreground="#475569"
+                            Text="Цех" />
+                        <ComboBox
+                            ItemsSource="{Binding Workshops}"
+                            SelectedItem="{Binding CurrentWorkshop}"
+                            Style="{StaticResource FluentComboBox}"
+                            Tag="-- Выберите цех --" />
+                    </StackPanel>
 
-                <!--  3. Точка измерения  -->
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock
-                        Margin="2,0,0,6"
-                        FontSize="11"
-                        FontWeight="Medium"
-                        Foreground="#475569"
-                        Text="Точка измерения" />
-                    <ComboBox
-                        ItemsSource="{Binding Points}"
-                        SelectedItem="{Binding SelectedPoint}"
-                        Style="{StaticResource FluentComboBox}"
-                        Tag="-- Выберите точку --" />
-                </StackPanel>
+                    <StackPanel Margin="0,0,0,24">
+                        <TextBlock
+                            Margin="2,0,0,6"
+                            FontSize="11"
+                            FontWeight="Medium"
+                            Foreground="#475569"
+                            Text="Двигатель" />
+                        <ComboBox
+                            ItemsSource="{Binding Engines}"
+                            SelectedItem="{Binding SelectedEngine}"
+                            Style="{StaticResource FluentComboBox}"
+                            Tag="-- Выберите двигатель --" />
+                    </StackPanel>
 
-                <!--  4. Ось  -->
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock
-                        Margin="2,0,0,6"
-                        FontSize="11"
-                        FontWeight="Medium"
-                        Foreground="#475569"
-                        Text="Ось измерения" />
-                    <ComboBox
-                        ItemsSource="{Binding Axes}"
-                        SelectedItem="{Binding SelectedAxis}"
-                        Style="{StaticResource FluentComboBox}"
-                        Tag="-- Выберите ось --" />
-                </StackPanel>
+                    <StackPanel Margin="0,0,0,24">
+                        <TextBlock
+                            Margin="2,0,0,6"
+                            FontSize="11"
+                            FontWeight="Medium"
+                            Foreground="#475569"
+                            Text="Точка измерения" />
+                        <ComboBox
+                            ItemsSource="{Binding Points}"
+                            SelectedItem="{Binding SelectedPoint}"
+                            Style="{StaticResource FluentComboBox}"
+                            Tag="-- Выберите точку --" />
+                    </StackPanel>
 
-                <!--  5. Параметры измерения  -->
-                <StackPanel Margin="0,0,0,16">
-                    <TextBlock
-                        Margin="2,0,0,6"
-                        FontSize="11"
-                        FontWeight="Medium"
-                        Foreground="#475569"
-                        Text="Параметры" />
-                    <ComboBox
-                        ItemsSource="{Binding Parameters}"
-                        SelectedItem="{Binding SelectedParameter}"
-                        Style="{StaticResource FluentComboBox}"
-                        Tag="-- Настройка параметров --" />
+                    <StackPanel Margin="0,0,0,24">
+                        <TextBlock
+                            Margin="2,0,0,6"
+                            FontSize="11"
+                            FontWeight="Medium"
+                            Foreground="#475569"
+                            Text="Ось измерения" />
+                        <ComboBox
+                            ItemsSource="{Binding Axes}"
+                            SelectedItem="{Binding SelectedAxis}"
+                            Style="{StaticResource FluentComboBox}"
+                            Tag="-- Выберите ось --" />
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock
+                            Margin="2,0,0,6"
+                            FontSize="11"
+                            FontWeight="Medium"
+                            Foreground="#475569"
+                            Text="Параметры" />
+                        <ComboBox
+                            ItemsSource="{Binding Parameters}"
+                            SelectedItem="{Binding SelectedParameter}"
+                            Style="{StaticResource FluentComboBox}"
+                            Tag="-- Настройка параметров --" />
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
+            </ScrollViewer>
         </Border>
 
-        <!--  ================= ПРАВАЯ БЕЛАЯ ПАНЕЛЬ С ГРАФИКАМИ =================  -->
-        <!--  Задали белый цвет фона и скроллинг для будущих графиков  -->
         <ScrollViewer
             Grid.Column="1"
             Background="White"
@@ -127,7 +121,6 @@
             VerticalScrollBarVisibility="Auto">
             <StackPanel>
 
-                <!--  Верхняя строка панели графиков: Выбор даты (ComboBox)  -->
                 <DockPanel Margin="8,0,8,24" LastChildFill="False">
                     <StackPanel DockPanel.Dock="Left">
                         <TextBlock
@@ -145,38 +138,35 @@
                     </StackPanel>
                 </DockPanel>
 
-                <!--  Контейнер для адаптивного переноса. Графики стали объемными (Ширина 460+)  -->
                 <WrapPanel Orientation="Horizontal">
 
-                    <!--  ─── КАРТОЧКА 1: ВРЕМЕННАЯ ОБЛАСТЬ ───  -->
-                    <Border
+                    <Grid
                         Width="470"
                         Height="340"
-                        Margin="8"
-                        Padding="20"
-                        Background="White"
-                        BorderBrush="#E2E8F0"
-                        BorderThickness="1"
-                        CornerRadius="8">
-                        <Border.Effect>
-                            <DropShadowEffect
-                                BlurRadius="12"
-                                Opacity="0.03"
-                                ShadowDepth="1"
-                                Color="Black" />
-                        </Border.Effect>
+                        Margin="8">
 
-                        <Grid>
+                        <Border
+                            Background="White"
+                            BorderBrush="#E2E8F0"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                            <Border.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="12"
+                                    Opacity="0.03"
+                                    RenderingBias="Performance"
+                                    ShadowDepth="1"
+                                    Color="Black" />
+                            </Border.Effect>
+                        </Border>
+
+                        <Grid Margin="20">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <!--  Метрики (RMS)  -->
                                 <RowDefinition Height="Auto" />
-                                <!--  Название  -->
                                 <RowDefinition Height="*" />
-                                <!--  График  -->
                             </Grid.RowDefinitions>
 
-                            <!--  Слева сверху: Метрика RMS  -->
                             <StackPanel Grid.Row="0" HorizontalAlignment="Left">
                                 <TextBlock
                                     FontSize="11"
@@ -187,29 +177,24 @@
                                     FontSize="20"
                                     FontWeight="Bold"
                                     Foreground="#0F172A"
-                                    Text="{Binding RmsValue, FallbackValue='4.25'}" />
+                                    Text="24.55" />
                             </StackPanel>
 
-                            <!--  Название графика черным жирным  -->
                             <TextBlock
                                 Grid.Row="1"
-                                Margin="0,12,0,12"
+                                Margin="0,12"
                                 FontSize="14"
                                 FontWeight="Bold"
                                 Foreground="#0F172A"
                                 Text="Временная область" />
 
-                            <!--  Объемный График (Синий)  -->
                             <lvc:CartesianChart
                                 Grid.Row="2"
                                 Series="{Binding TimeDomainSeries}"
-                                TooltipPosition="Top"
-                                XAxes="{Binding TimeXAxes}"
-                                YAxes="{Binding CommonYAxes}" />
+                                TooltipPosition="Top" />
                         </Grid>
-                    </Border>
+                    </Grid>
 
-                    <!--  ─── КАРТОЧКА 2: ЧАСТОТНАЯ ОБЛАСТЬ ───  -->
                     <Border
                         Width="470"
                         Height="340"
@@ -271,9 +256,6 @@
                                 YAxes="{Binding CommonYAxes}" />
                         </Grid>
                     </Border>
-
-                    <!--  Ниже будут автоматически и аккуратно выстраиваться любые будущие графики  -->
-
                 </WrapPanel>
             </StackPanel>
         </ScrollViewer>

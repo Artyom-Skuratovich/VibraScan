@@ -85,7 +85,6 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (OperationCanceledException)
             {
-
             }
             catch (Exception ex)
             {
@@ -122,7 +121,6 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (OperationCanceledException)
             {
-
             }
             catch (Exception ex)
             {
