@@ -52,6 +52,72 @@ namespace VibraScan.Presentation.ViewModels
             CurrentFileNumber = 0;
         }
 
+        private void SetImportState(bool isImporting)
+        {
+            IsImporting = isImporting;
+            StartImportCommand.NotifyCanExecuteChanged();
+        }
+
+        private Progress<BulkImportProgress> CreateOverallProgress()
+        {
+            return new Progress<BulkImportProgress>(progress =>
+            {
+                OverallProgressText = progress.Description;
+                CurrentFileNumber = progress.CurrentNumber;
+                var fileIndex = progress.CurrentNumber - 1;
+
+                if ((progress.Error != null) && (fileIndex >= 0) && (fileIndex < Files.Count))
+                {
+                    var file = Files[fileIndex];
+                    file.Error = progress.Error;
+                    file.Stage = $"Ошибка: {progress.Error.Message}";
+                    file.ImportPercentage = 0;
+                }
+            });
+        }
+
+        private Progress<ImportProgress> CreateSegmentProgress()
+        {
+            return new Progress<ImportProgress>(progress =>
+            {
+                var fileIndex = CurrentFileNumber - 1;
+
+                if ((fileIndex >= 0) && (fileIndex < Files.Count))
+                {
+                    var file = Files[fileIndex];
+                    file.Stage = progress.CurrentStage;
+                    file.ImportPercentage = progress.Percentage;
+                }
+            });
+        }
+
+        private async Task<List<ImportSource>> OpenImportSourceAsync(CancellationToken ct)
+        {
+            return await Task.Run(() =>
+            {
+                var resultList = new List<ImportSource>();
+
+                try
+                {
+                    foreach (var file in Files)
+                    {
+                        ct.ThrowIfCancellationRequested();
+                        var stream = new FileStream(file.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
+                        resultList.Add(new ImportSource(file.Name, stream));
+                    }
+                    return resultList;
+                }
+                catch
+                {
+                    foreach (var source in resultList)
+                    {
+                        source.Data?.Dispose();
+                    }
+                    throw;
+                }
+            }, ct);
+        }
+
         private void OnImportFinished(BulkImportResult? newResult)
         {
             if (newResult == null) return;
@@ -100,43 +166,16 @@ namespace VibraScan.Presentation.ViewModels
         {
             ResetAllFiles();
 
-            var overallProgress = new Progress<BulkImportProgress>(progress =>
-            {
-                OverallProgressText = progress.Description;
-                CurrentFileNumber = progress.CurrentNumber;
-                var fileIndex = progress.CurrentNumber - 1;
-
-                if ((progress.Error != null) && (fileIndex >= 0) && (fileIndex < Files.Count))
-                {
-                    var file = Files[fileIndex];
-                    file.Error = progress.Error;
-                    file.Stage = $"Ошибка: {progress.Error.Message}";
-                    file.ImportPercentage = 0;
-                }
-            });
-
-            var segmentProgress = new Progress<ImportProgress>(progress =>
-            {
-                var fileIndex = CurrentFileNumber - 1;
-
-                if ((fileIndex >= 0) && (fileIndex < Files.Count))
-                {
-                    var file = Files[fileIndex];
-                    file.Stage = progress.CurrentStage;
-                    file.ImportPercentage = progress.Percentage;
-                }
-            });
-
+            var overallProgress = CreateOverallProgress();
+            var segmentProgress = CreateSegmentProgress();
             var sources = new List<ImportSource>(Files.Count);
             BulkImportResult? result = null;
 
             try
             {
-                foreach (var file in Files)
-                {
-                    var stream = new FileStream(file.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
-                    sources.Add(new ImportSource(file.Name, stream));
-                }
+                SetImportState(true);
+                OverallProgressText = "Подготовка файлов к импорту...";
+                sources.AddRange(await OpenImportSourceAsync(ct));
 
                 var command = new StartBulkImportCommand
                 {
@@ -144,11 +183,10 @@ namespace VibraScan.Presentation.ViewModels
                     OverallProgress = overallProgress,
                     SegmentProgress = segmentProgress
                 };
-
-                IsImporting = true;
-                StartImportCommand.NotifyCanExecuteChanged();
-
                 result = await _commandDispatcher.SendAsync(command, ct);
+            }
+            catch (OperationCanceledException)
+            {
             }
             catch (Exception ex)
             {
@@ -157,8 +195,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             finally
             {
-                IsImporting = false;
-                StartImportCommand.NotifyCanExecuteChanged();
+                SetImportState(false);
 
                 foreach (var source in sources)
                 {
