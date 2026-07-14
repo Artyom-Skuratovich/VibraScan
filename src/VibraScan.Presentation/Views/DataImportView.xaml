@@ -223,6 +223,8 @@
                     Padding="8"
                     HorizontalContentAlignment="Stretch"
                     VerticalContentAlignment="Center"
+                    helpers:ListBoxHelper.EnableSmartScroll="True"
+                    helpers:ListBoxHelper.ResetScrollTrigger="{Binding IsImporting}"
                     Background="Transparent"
                     BorderThickness="0"
                     ItemsSource="{Binding Files}"
