@@ -21,7 +21,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Resources/DataTemplates/NotificationTemplates.xaml" />
+                <ResourceDictionary Source="/Resources/DataTemplates/Notification.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -38,7 +38,7 @@
                     Command="{Binding CopyToClipboardCommand}"
                     Content="Копировать детали"
                     DockPanel.Dock="Bottom"
-                    Visibility="{Binding HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    Visibility="{Binding HasDetails, Converter={StaticResource BoolToVis}}" />
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
@@ -67,7 +67,7 @@
                         <Expander
                             Foreground="#666666"
                             Header="Подробности"
-                            Visibility="{Binding HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            Visibility="{Binding HasDetails, Converter={StaticResource BoolToVis}}">
                             <Border
                                 Margin="0,8,0,0"
                                 Background="White"

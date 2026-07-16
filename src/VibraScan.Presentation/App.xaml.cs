@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using LiveChartsCore;
+using LiveChartsCore.Kernel;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Windows;
@@ -45,6 +47,8 @@ namespace VibraScan.Presentation
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            LiveCharts.Configure(config => config.HasMap<float>((val, index) => new Coordinate(index, val)));
 
             var windowService = _serviceProvider.GetRequiredService<IWindowService>();
             windowService.Show<MigrationViewModel>();

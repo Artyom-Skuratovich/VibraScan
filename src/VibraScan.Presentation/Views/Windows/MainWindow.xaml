@@ -12,6 +12,7 @@
     Height="450"
     d:DataContext="{d:DesignInstance Type=vm:MainViewModel,
                                      IsDesignTimeCreatable=False}"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid>
         <TabControl Style="{StaticResource FluentTabControl}">
