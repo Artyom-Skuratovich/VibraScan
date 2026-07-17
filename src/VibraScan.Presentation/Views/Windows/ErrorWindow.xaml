@@ -38,7 +38,7 @@
                     Command="{Binding CopyToClipboardCommand}"
                     Content="Копировать детали"
                     DockPanel.Dock="Bottom"
-                    Visibility="{Binding HasDetails, Converter={StaticResource BoolToVis}}" />
+                    Visibility="{Binding HasDetails, Converter={StaticResource BoolToVisConverter}}" />
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
@@ -67,7 +67,7 @@
                         <Expander
                             Foreground="#666666"
                             Header="Подробности"
-                            Visibility="{Binding HasDetails, Converter={StaticResource BoolToVis}}">
+                            Visibility="{Binding HasDetails, Converter={StaticResource BoolToVisConverter}}">
                             <Border
                                 Margin="0,8,0,0"
                                 Background="White"

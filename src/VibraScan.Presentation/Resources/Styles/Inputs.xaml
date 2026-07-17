@@ -288,6 +288,13 @@
                             <Setter TargetName="Placeholder" Property="Visibility" Value="Visible" />
                         </Trigger>
 
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="BorderBrush" Value="#CBD5E1" />
+                            <Setter Property="Foreground" Value="#94A3B8" />
+                            <Setter TargetName="Arrow" Property="Fill" Value="#94A3B8" />
+                            <Setter TargetName="Placeholder" Property="Foreground" Value="#CBD5E1" />
+                        </Trigger>
+
                         <Trigger Property="IsDropDownOpen" Value="True">
                             <Setter Property="BorderThickness" Value="0,0,0,2" />
                             <Setter Property="BorderBrush" Value="#2563EB" />

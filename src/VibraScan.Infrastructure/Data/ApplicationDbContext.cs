@@ -18,7 +18,7 @@ namespace VibraScan.Infrastructure.Data
 
         public DbSet<MeasurementProfile> MeasurementProfiles => Set<MeasurementProfile>();
 
-        public DbSet<Point> Points => throw new NotImplementedException();
+        public DbSet<Point> Points => Set<Point>();
 
         public DbSet<VibrationMeasurement> VibrationMeasurements => Set<VibrationMeasurement>();
 

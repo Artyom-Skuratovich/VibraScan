@@ -94,7 +94,7 @@
                     VerticalAlignment="Top"
                     IsChecked="{Binding IsChecked}"
                     IsHitTestVisible="False"
-                    Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
+                    Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisConverter}}">
                     <CheckBox.Style>
                         <Style TargetType="CheckBox">
                             <Setter Property="Template">

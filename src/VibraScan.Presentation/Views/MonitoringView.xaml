@@ -12,14 +12,6 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/DataTemplates/EngineBriefCard.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
@@ -121,7 +113,7 @@
                             Padding="20,0"
                             Content="Действия"
                             Style="{StaticResource FluentPrimaryButton}"
-                            Visibility="{Binding IsChecked, ElementName=MultiSelectToggle, Converter={StaticResource BoolToVis}}">
+                            Visibility="{Binding IsChecked, ElementName=MultiSelectToggle, Converter={StaticResource BoolToVisConverter}}">
                             <Button.RenderTransform>
                                 <TranslateTransform X="0" />
                             </Button.RenderTransform>
@@ -254,14 +246,14 @@
                                     Text="Срок проверки" />
 
                                 <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal">
-                                    <RadioButton Content="Всё" IsChecked="{Binding SelectedInspectionFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static ges:InspectionStatusFilter.All}}" />
+                                    <RadioButton Content="Всё" IsChecked="{Binding SelectedInspectionFilter, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static ges:InspectionStatusFilter.All}}" />
 
-                                    <RadioButton Content="Истёк" IsChecked="{Binding SelectedInspectionFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static ges:InspectionStatusFilter.Overdue}}" />
+                                    <RadioButton Content="Истёк" IsChecked="{Binding SelectedInspectionFilter, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static ges:InspectionStatusFilter.Overdue}}" />
 
                                     <RadioButton
                                         Margin="0"
                                         Content="В норме"
-                                        IsChecked="{Binding SelectedInspectionFilter, Converter={StaticResource EnumToBool}, ConverterParameter={x:Static ges:InspectionStatusFilter.Valid}}" />
+                                        IsChecked="{Binding SelectedInspectionFilter, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static ges:InspectionStatusFilter.Valid}}" />
                                 </StackPanel>
                             </StackPanel>
 
