@@ -264,13 +264,13 @@
 
                     <ContentControl
                         Margin="12"
-                        Content="{Binding TimeDomainChart}"
-                        ContentTemplate="{StaticResource ChartCardTemplate}" />
+                        Content="{Binding TimeDomain}"
+                        ContentTemplate="{StaticResource ChartBundleTemplate}" />
 
                     <ContentControl
                         Margin="12"
-                        Content="{Binding FrequencyDomainChart}"
-                        ContentTemplate="{StaticResource ChartCardTemplate}" />
+                        Content="{Binding FrequencyDomain}"
+                        ContentTemplate="{StaticResource ChartBundleTemplate}" />
                 </UniformGrid>
             </StackPanel>
         </ScrollViewer>

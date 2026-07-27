@@ -50,11 +50,9 @@
         </StackPanel>
     </DataTemplate>
 
-    <DataTemplate x:Key="ChartCardTemplate" DataType="{x:Type models:BaseChart}">
+    <DataTemplate x:Key="ChartBundleTemplate">
         <Grid
             MinWidth="450"
-            MinHeight="350"
-            MaxHeight="600"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
             <Border
@@ -75,35 +73,41 @@
                         ShadowDepth="1"
                         Color="Black" />
                 </Border.Effect>
-
             </Border>
 
-            <Grid
+            <StackPanel
                 Margin="20"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+                Orientation="Vertical">
 
-                <ContentControl Grid.Row="0" Content="{Binding}" />
+                <StackPanel DataContext="{Binding MeasurementChart}">
+                    <ContentControl Content="{Binding}" />
 
-                <TextBlock
-                    Grid.Row="1"
-                    Margin="0,12"
-                    FontSize="14"
-                    FontWeight="Bold"
-                    Foreground="#0F172A"
-                    Text="{Binding MeasurementDomain}" />
+                    <TextBlock
+                        Margin="0,12"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Foreground="#0F172A"
+                        Text="{Binding Title}" />
 
-                <scott:WpfPlot
-                    Grid.Row="2"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    helpers:ScottPlotHelper.PlotData="{Binding Values}" />
-            </Grid>
+                    <scott:WpfPlot
+                        MinHeight="200"
+                        HorizontalAlignment="Stretch"
+                        helpers:ScottPlotHelper.PlotData="{Binding Values}" />
+                </StackPanel>
+
+                <StackPanel Margin="0,40,0,0" DataContext="{Binding RmsHistoryChart}">
+                    <TextBlock
+                        Margin="0,0,0,12"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Foreground="#0F172A"
+                        Text="{Binding Title}" />
+
+                    <scott:WpfPlot MinHeight="200" HorizontalAlignment="Stretch" />
+                </StackPanel>
+
+            </StackPanel>
         </Grid>
     </DataTemplate>
 

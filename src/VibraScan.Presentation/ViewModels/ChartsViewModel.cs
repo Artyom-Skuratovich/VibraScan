@@ -35,8 +35,8 @@ namespace VibraScan.Presentation.ViewModels
 
         public ObservableCollection<MeasurementProfile> MeasurementProfiles { get; } = [];
 
-        [ObservableProperty] private TimeDomainChart? _timeDomainChart;
-        [ObservableProperty] private FrequencyDomainChart? frequencyDomainChart;
+        [ObservableProperty] private ChartBundle<TimeDomainChart>? _timeDomain;
+        [ObservableProperty] private ChartBundle<FrequencyDomainChart>? _frequencyDomain;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsWorkshopSelected))]
@@ -134,8 +134,8 @@ namespace VibraScan.Presentation.ViewModels
 
         partial void OnSelectedMeasurementDateChanged(DateTime? value)
         {
-            TimeDomainChart = null;
-            FrequencyDomainChart = null;
+            TimeDomain = null;
+            FrequencyDomain = null;
 
             if (LoadChartsCommand.IsRunning)
             {
@@ -331,8 +331,8 @@ namespace VibraScan.Presentation.ViewModels
                 var query = new GetChartsQuery(SelectedMeasurementDate.Value, SelectedPoint.Id, SelectedMeasurementProfile.Id, SelectedAxisType);
                 var charts = await _commandDispatcher.SendAsync(query, ct);
 
-                TimeDomainChart = charts?.TimeDomainChart;
-                FrequencyDomainChart = charts?.FrequencyDomainChart;
+                TimeDomain = charts?.TimeDomain;
+                FrequencyDomain = charts?.FrequencyDomain;
             }
             catch (OperationCanceledException)
             {

@@ -1,5 +1,7 @@
-﻿namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
+﻿using VibraScan.Domain.ValueObjects;
+
+namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
 {
-    public record FrequencyDomainChart(string MeasurementDomain, float Rms, IReadOnlyList<float> Values, float AmplitudeRange)
-        : BaseChart(MeasurementDomain, Rms, Values);
+    public record FrequencyDomainChart(float Rms, IReadOnlyList<float> Values, float AmplitudeRange)
+        : SingleMeasurementChart(MeasurementDomain.Frequency.Name, Rms, Values);
 }

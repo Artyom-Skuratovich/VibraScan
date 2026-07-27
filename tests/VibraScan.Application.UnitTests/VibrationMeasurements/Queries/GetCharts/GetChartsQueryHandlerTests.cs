@@ -34,10 +34,10 @@ namespace VibraScan.Application.UnitTests.VibrationMeasurements.Queries.GetChart
 
             // Assert
             result.Should().NotBeNull();
-            result!.TimeDomainChart.Should().NotBeNull();
-            result.FrequencyDomainChart.Should().BeNull();
-            result.TimeDomainChart!.Values.Should().NotBeEmpty();
-            result.TimeDomainChart!.MeasurementDomain.Should().Be(MeasurementDomain.Time.Name);
+            result!.TimeDomain.Should().NotBeNull();
+            result.FrequencyDomain.Should().BeNull();
+            result.TimeDomain!.Values.Should().NotBeEmpty();
+            result.TimeDomain!.Title.Should().Be(MeasurementDomain.Time.Name);
         }
 
         [Test]
@@ -52,10 +52,10 @@ namespace VibraScan.Application.UnitTests.VibrationMeasurements.Queries.GetChart
 
             // Assert
             result.Should().NotBeNull();
-            result.FrequencyDomainChart!.Should().NotBeNull();
-            result.TimeDomainChart.Should().BeNull();
-            result.FrequencyDomainChart!.Values.Should().NotBeEmpty();
-            result.FrequencyDomainChart!.MeasurementDomain.Should().Be(MeasurementDomain.Frequency.Name);
+            result.FrequencyDomain!.Should().NotBeNull();
+            result.TimeDomain.Should().BeNull();
+            result.FrequencyDomain!.Values.Should().NotBeEmpty();
+            result.FrequencyDomain!.Title.Should().Be(MeasurementDomain.Frequency.Name);
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace VibraScan.Application.UnitTests.VibrationMeasurements.Queries.GetChart
 
             // Assert
             result.Should().NotBeNull();
-            result.TimeDomainChart.Should().NotBeNull();
-            result.FrequencyDomainChart.Should().NotBeNull();
+            result.TimeDomain.Should().NotBeNull();
+            result.FrequencyDomain.Should().NotBeNull();
         }
 
         [Test]
@@ -111,9 +111,9 @@ namespace VibraScan.Application.UnitTests.VibrationMeasurements.Queries.GetChart
 
             // Assert
             result.Should().NotBeNull();
-            result.FrequencyDomainChart.Should().NotBeNull();
+            result.FrequencyDomain.Should().NotBeNull();
 
-            result.FrequencyDomainChart!.AmplitudeRange.Should().Be(9.5f);
+            result.FrequencyDomain!.AmplitudeRange.Should().Be(9.5f);
         }
 
         private void SetupContext(ICollection<VibrationMeasurement> measurements)
