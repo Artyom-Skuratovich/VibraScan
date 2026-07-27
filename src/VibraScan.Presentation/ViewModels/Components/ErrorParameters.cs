@@ -1,4 +1,4 @@
-﻿namespace VibraScan.Presentation.ViewModels.Models
+﻿namespace VibraScan.Presentation.ViewModels.Components
 {
     public record ErrorParameters(
         string Title,

@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:VibraScan.Presentation.ViewModels.Models">
+    xmlns:local="clr-namespace:VibraScan.Presentation.ViewModels.Components">
 
-    <DataTemplate DataType="{x:Type local:ToastNotification}">
+    <DataTemplate DataType="{x:Type local:ToastNotificationViewModel}">
         <Border
             x:Name="NotifyBorder"
             Padding="15,10"

@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace VibraScan.Presentation.ViewModels.Models
+namespace VibraScan.Presentation.ViewModels.Components
 {
-    public partial class ToastNotification(int delayMs = 2000) : ObservableObject
+    public partial class ToastNotificationViewModel(int delayMs = 2000) : ObservableObject
     {
         private readonly int _delayMs = delayMs;
 
@@ -28,7 +28,6 @@ namespace VibraScan.Presentation.ViewModels.Models
             }
             catch (OperationCanceledException)
             {
-
             }
         }
 

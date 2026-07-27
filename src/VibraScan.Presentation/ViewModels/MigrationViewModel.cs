@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using VibraScan.Presentation.Common.Interfaces;
 using VibraScan.Presentation.Services.Interfaces;
-using VibraScan.Presentation.ViewModels.Models;
+using VibraScan.Presentation.ViewModels.Components;
 
 namespace VibraScan.Presentation.ViewModels
 {
@@ -20,7 +20,7 @@ namespace VibraScan.Presentation.ViewModels
         private string _title = "Подготовка базы данных";
 
         [ObservableProperty]
-        private LoadingSpinner _spinner = new();
+        private LoadingSpinnerViewModel _spinner = new();
 
         public void Cancel()
         {

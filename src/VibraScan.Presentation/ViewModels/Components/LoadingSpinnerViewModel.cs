@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace VibraScan.Presentation.ViewModels.Models
+namespace VibraScan.Presentation.ViewModels.Components
 {
-    public partial class LoadingSpinner : ObservableObject
+    public partial class LoadingSpinnerViewModel : ObservableObject
     {
         [ObservableProperty]
         private bool _isPaused;

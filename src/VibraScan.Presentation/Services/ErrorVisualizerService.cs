@@ -1,6 +1,6 @@
 ﻿using VibraScan.Presentation.Services.Interfaces;
 using VibraScan.Presentation.ViewModels;
-using VibraScan.Presentation.ViewModels.Models;
+using VibraScan.Presentation.ViewModels.Components;
 
 namespace VibraScan.Presentation.Services
 {

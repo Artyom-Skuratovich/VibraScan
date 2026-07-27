@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:VibraScan.Presentation.ViewModels.Models">
+    xmlns:local="clr-namespace:VibraScan.Presentation.ViewModels.Components">
 
     <Style x:Key="SpinnerCircleStyle" TargetType="Ellipse">
         <Setter Property="Fill" Value="#2563EB" />
@@ -28,7 +28,7 @@
         </Setter>
     </Style>
 
-    <DataTemplate DataType="{x:Type local:LoadingSpinner}">
+    <DataTemplate DataType="{x:Type local:LoadingSpinnerViewModel}">
         <Grid x:Name="LayoutRoot" Visibility="Visible">
             <Viewbox Width="100" Height="100">
                 <Canvas

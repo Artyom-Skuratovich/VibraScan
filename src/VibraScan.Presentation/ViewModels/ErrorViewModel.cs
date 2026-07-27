@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VibraScan.Presentation.Services.Interfaces;
-using VibraScan.Presentation.ViewModels.Models;
+using VibraScan.Presentation.ViewModels.Components;
 
 namespace VibraScan.Presentation.ViewModels
 {
@@ -22,7 +22,7 @@ namespace VibraScan.Presentation.ViewModels
         private bool _hasDetails;
 
         [ObservableProperty]
-        public ToastNotification _currentToast;
+        private ToastNotificationViewModel _currentToast;
 
         public ErrorViewModel(ErrorParameters parameters, IClipboardService clipboard)
         {
@@ -34,7 +34,7 @@ namespace VibraScan.Presentation.ViewModels
                 StackTrace = parameters.Exception.ToString();
                 HasDetails = true;
             }
-            CurrentToast = new ToastNotification();
+            CurrentToast = new ToastNotificationViewModel();
             _clipboard = clipboard;
         }
 

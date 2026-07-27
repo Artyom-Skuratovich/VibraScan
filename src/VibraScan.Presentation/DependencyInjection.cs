@@ -4,7 +4,7 @@ using VibraScan.Presentation.Common;
 using VibraScan.Presentation.Services;
 using VibraScan.Presentation.Services.Interfaces;
 using VibraScan.Presentation.ViewModels;
-using VibraScan.Presentation.ViewModels.Models;
+using VibraScan.Presentation.ViewModels.Components;
 using VibraScan.Presentation.Views.Windows;
 
 namespace VibraScan.Presentation
