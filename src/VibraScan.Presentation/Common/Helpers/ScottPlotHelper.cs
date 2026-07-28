@@ -1,11 +1,26 @@
 ﻿using ScottPlot;
+using ScottPlot.Colormaps;
+using ScottPlot.Panels;
+using ScottPlot.Plottables;
 using ScottPlot.WPF;
 using System.Windows;
+using System.Windows.Input;
+using VibraScan.Application.VibrationMeasurements.Queries.GetCharts;
 
 namespace VibraScan.Presentation.Common.Helpers
 {
     public static class ScottPlotHelper
     {
+        private const float MarkerRadius = 12f;
+
+        private static readonly CustomInterpolated TemperatureColormap = new([
+            Color.FromHex("#10B981"),
+            Color.FromHex("#A7F3D0"),
+            Color.FromHex("#FBBF24"),
+            Color.FromHex("#F97316"),
+            Color.FromHex("#EF4444")
+        ]);
+
         public static readonly DependencyProperty PlotDataProperty =
             DependencyProperty.RegisterAttached(
                 "PlotData",
@@ -16,24 +31,213 @@ namespace VibraScan.Presentation.Common.Helpers
         public static IReadOnlyList<float> GetPlotData(DependencyObject obj) => (IReadOnlyList<float>)obj.GetValue(PlotDataProperty);
         public static void SetPlotData(DependencyObject obj, IReadOnlyList<float> value) => obj.SetValue(PlotDataProperty, value);
 
+        public static readonly DependencyProperty PlotHistoryDataProperty =
+            DependencyProperty.RegisterAttached(
+                "PlotHistoryData",
+                typeof(IReadOnlyList<RmsHistoryPoint>),
+                typeof(ScottPlotHelper),
+                new PropertyMetadata(null, OnPlotHistoryDataChanged));
+
+        public static IReadOnlyList<RmsHistoryPoint> GetPlotHistoryData(DependencyObject obj) => (IReadOnlyList<RmsHistoryPoint>)obj.GetValue(PlotHistoryDataProperty);
+        public static void SetPlotHistoryData(DependencyObject obj, IReadOnlyList<RmsHistoryPoint> value) => obj.SetValue(PlotHistoryDataProperty, value);
+
+        public static readonly DependencyProperty MinRmsProperty =
+            DependencyProperty.RegisterAttached("MinRms", typeof(float), typeof(ScottPlotHelper), new PropertyMetadata(4.0f));
+
+        public static readonly DependencyProperty MaxRmsProperty =
+            DependencyProperty.RegisterAttached("MaxRms", typeof(float), typeof(ScottPlotHelper), new PropertyMetadata(7.0f));
+
+        public static float GetMinRms(DependencyObject obj) => (float)obj.GetValue(MinRmsProperty);
+        public static void SetMinRms(DependencyObject obj, float value) => obj.SetValue(MinRmsProperty, value);
+
+        public static float GetMaxRms(DependencyObject obj) => (float)obj.GetValue(MaxRmsProperty);
+        public static void SetMaxRms(DependencyObject obj, float value) => obj.SetValue(MaxRmsProperty, value);
+
         private static void OnPlotDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is WpfPlot wpfPlot)
+            if (d is WpfPlot plot)
             {
-                wpfPlot.Plot.Clear();
+                plot.Plot.Clear();
 
-                if (e.NewValue is IReadOnlyList<float> data && data.Count > 0)
+                if (e.NewValue is IReadOnlyList<float> data && (data.Count > 0))
                 {
-                    var signal = wpfPlot.Plot.Add.Signal(data);
+                    var signal = plot.Plot.Add.Signal(data);
 
                     signal.Color = Color.FromHex("#2563EB");
                     signal.LineWidth = 1;
 
-                    wpfPlot.Plot.Axes.Margins(0, 0.1);
+                    plot.Plot.Axes.Margins(0, 0.1);
                 }
 
-                wpfPlot.Refresh();
+                plot.Refresh();
             }
+        }
+
+        private static void OnPlotHistoryDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is WpfPlot plot)
+            {
+                EnsureColorBarInitialized(plot);
+                EnsureMouseTrackingInitialized(plot);
+
+                plot.Plot.Clear();
+
+                if (e.NewValue is IReadOnlyList<RmsHistoryPoint> data && (data.Count > 0))
+                {
+                    DrawHistoryMarkers(plot, data);
+                    CreateHoverLines(plot);
+
+                    plot.Plot.Axes.DateTimeTicksBottom();
+                    plot.Plot.Axes.Margins(0.1, 0.2);
+                }
+
+                plot.Refresh();
+            }
+        }
+
+        private static void EnsureColorBarInitialized(WpfPlot plot)
+        {
+            if (plot.Plot.Axes.GetPanels().Any(p => p is ColorBar))
+            {
+                return;
+            }
+
+            var minRms = GetMinRms(plot);
+            var maxRms = GetMaxRms(plot);
+
+            var dummy = new double[1, 1];
+            var heatmap = plot.Plot.Add.Heatmap(dummy);
+            heatmap.Colormap = TemperatureColormap;
+            heatmap.ManualRange = new ScottPlot.Range(minRms, maxRms);
+            heatmap.IsVisible = false;
+
+            var colorbar = plot.Plot.Add.ColorBar(heatmap);
+            colorbar.Edge = Edge.Right;
+        }
+
+        private static void EnsureMouseTrackingInitialized(WpfPlot plot)
+        {
+            plot.MouseMove -= WpfPlotMouseMove;
+            plot.MouseMove += WpfPlotMouseMove;
+        }
+
+        private static void DrawHistoryMarkers(WpfPlot plot, IReadOnlyList<RmsHistoryPoint> data)
+        {
+            var minRms = GetMinRms(plot);
+            var maxRms = GetMaxRms(plot);
+
+            foreach (var point in data)
+            {
+                var x = point.Timestamp.ToOADate();
+                var y = point.Rms;
+
+                double fraction = (maxRms - minRms) > 0 ? (y - minRms) / (maxRms - minRms) : 0;
+                fraction = Math.Clamp(fraction, 0.0, 1.0);
+                var pointColor = TemperatureColormap.GetColor(fraction);
+
+                var marker = plot.Plot.Add.Marker(x, y);
+                marker.Color = pointColor;
+                marker.Size = MarkerRadius * 2;
+                marker.Shape = MarkerShape.FilledCircle;
+
+                marker.MarkerStyle.OutlineColor = Color.FromHex("#FFFFFF");
+                marker.MarkerStyle.OutlineWidth = 1;
+            }
+        }
+
+        private static void CreateHoverLines(WpfPlot plot)
+        {
+            var crosshair = plot.Plot.Add.Crosshair(0, 0);
+
+            crosshair.IsVisible = false;
+            crosshair.LineColor = Color.FromHex("#64748B");
+            crosshair.LineWidth = 1;
+            crosshair.LinePattern = LinePattern.Dashed;
+
+            ConfigureLabelStyles(crosshair.HorizontalLine.LabelStyle);
+            ConfigureLabelStyles(crosshair.VerticalLine.LabelStyle);
+        }
+
+        private static void ConfigureLabelStyles(LabelStyle label)
+        {
+            label.ForeColor = Colors.White;
+            label.BackgroundColor = Color.FromHex("#64748B");
+            label.Bold = true;
+            label.Padding = 6;
+        }
+
+        private static void UpdateHoverElements(WpfPlot plot, Crosshair crosshair, RmsHistoryPoint? point)
+        {
+            if (point is null) return;
+
+            var exactX = point.Timestamp.ToOADate();
+            var exactY = point.Rms;
+
+            crosshair.Position = new Coordinates(exactX, exactY);
+
+            crosshair.HorizontalLine.LabelText = $"{point.Rms}";
+            crosshair.VerticalLine.LabelText = point.Timestamp.ToString("dd.MM.yyyy HH:mm:ss");
+
+            var dataRect = plot.Plot.RenderManager.LastRender.DataRect;
+            var pointPixel = plot.Plot.GetPixel(crosshair.Position);
+
+            var xCenter = dataRect.Left + (dataRect.Width / 2);
+            var yCenter = dataRect.Top + (dataRect.Height / 2);
+
+            crosshair.VerticalLine.ManualLabelAlignment = (pointPixel.X < xCenter) ? Alignment.UpperLeft : Alignment.UpperRight;
+            crosshair.HorizontalLine.ManualLabelAlignment = (pointPixel.Y < yCenter) ? Alignment.LowerRight : Alignment.LowerLeft;
+
+            crosshair.IsVisible = true;
+            plot.Refresh();
+        }
+
+        private static void WpfPlotMouseMove(object sender, MouseEventArgs e)
+        {
+            if (sender is not WpfPlot plot) return;
+
+            var data = GetPlotHistoryData(plot);
+            if ((data == null) || (data.Count == 0)) return;
+
+            var crosshair = plot.Plot.GetPlottables<Crosshair>().FirstOrDefault();
+            if (crosshair == null) return;
+
+            var mousePosition = e.GetPosition(plot);
+            var mousePixel = new Pixel(mousePosition.X, mousePosition.Y);
+
+            if (TryGetPointUnderMouse(plot, data, mousePixel, out var closestPoint))
+            {
+                UpdateHoverElements(plot, crosshair, closestPoint);
+                return;
+            }
+
+            if (crosshair.IsVisible)
+            {
+                crosshair.IsVisible = false;
+                plot.Refresh();
+            }
+        }
+
+        private static bool TryGetPointUnderMouse(WpfPlot plot, IReadOnlyList<RmsHistoryPoint> data, Pixel mousePixel, out RmsHistoryPoint? closestPoint)
+        {
+            closestPoint = null;
+            var minPixelDistance = double.MaxValue;
+
+            foreach (var point in data)
+            {
+                var pointX = point.Timestamp.ToOADate();
+                var pointY = point.Rms;
+                var pointPixel = plot.Plot.GetPixel(new Coordinates(pointX, pointY));
+
+                var distance = pointPixel.DistanceFrom(mousePixel);
+
+                if (distance < minPixelDistance)
+                {
+                    minPixelDistance = distance;
+                    closestPoint = point;
+                }
+            }
+
+            return (closestPoint is not null) && (minPixelDistance <= MarkerRadius);
         }
     }
 }

@@ -104,7 +104,10 @@
                         Foreground="#0F172A"
                         Text="{Binding Title}" />
 
-                    <scott:WpfPlot MinHeight="200" HorizontalAlignment="Stretch" />
+                    <scott:WpfPlot
+                        MinHeight="200"
+                        HorizontalAlignment="Stretch"
+                        helpers:ScottPlotHelper.PlotHistoryData="{Binding Values}" />
                 </StackPanel>
 
             </StackPanel>
