@@ -58,7 +58,8 @@
                             BorderThickness="0"
                             Command="{Binding LoadWorkshopsCommand}"
                             Cursor="Hand"
-                            ToolTip="Обновить списки цехов и оборудования">
+                            ToolTip="Обновить списки цехов и оборудования"
+                            ToolTipService.BetweenShowDelay="0">
 
                             <Button.Style>
                                 <Style TargetType="Button">
@@ -250,19 +251,40 @@
 
                     <UniformGrid.Style>
                         <Style TargetType="UniformGrid">
-                            <Setter Property="Columns" Value="2" />
-                            <Setter Property="Rows" Value="1" />
+                            <Setter Property="Columns" Value="1" />
+                            <Setter Property="Rows" Value="2" />
 
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding ActualWidth, ElementName=ChartsContainer, Converter={StaticResource WidthToLayConverter}}" Value="True">
+                                <DataTrigger Binding="{Binding Visibility, ElementName=TimeChart}" Value="Collapsed">
+                                    <Setter Property="Columns" Value="1" />
+                                    <Setter Property="Rows" Value="1" />
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Visibility, ElementName=FrequencyChart}" Value="Collapsed">
+                                    <Setter Property="Columns" Value="1" />
+                                    <Setter Property="Rows" Value="1" />
+                                </DataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ActualWidth, ElementName=ChartsContainer, Converter={StaticResource WidthToLayConverter}}" Value="False" />
+                                        <Condition Binding="{Binding Visibility, ElementName=TimeChart}" Value="Visible" />
+                                        <Condition Binding="{Binding Visibility, ElementName=FrequencyChart}" Value="Visible" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Columns" Value="2" />
+                                    <Setter Property="Rows" Value="1" />
+                                </MultiDataTrigger>
+
+                                <!--<DataTrigger Binding="{Binding ActualWidth, ElementName=ChartsContainer, Converter={StaticResource WidthToLayConverter}}" Value="True">
                                     <Setter Property="Columns" Value="1" />
                                     <Setter Property="Rows" Value="2" />
-                                </DataTrigger>
+                                </DataTrigger>-->
                             </Style.Triggers>
                         </Style>
                     </UniformGrid.Style>
 
                     <ContentControl
+                        x:Name="TimeChart"
                         Margin="12"
                         Content="{Binding TimeDomain}"
                         ContentTemplate="{StaticResource ChartBundleTemplate}">
@@ -278,6 +300,7 @@
                     </ContentControl>
 
                     <ContentControl
+                        x:Name="FrequencyChart"
                         Margin="12"
                         Content="{Binding FrequencyDomain}"
                         ContentTemplate="{StaticResource ChartBundleTemplate}">
