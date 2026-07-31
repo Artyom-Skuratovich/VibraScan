@@ -16,7 +16,8 @@ using VibraScan.Presentation.Services.Interfaces;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class ChartsViewModel(ICommandDispatcher commandDispatcher, IErrorVisualizerService errorVisualizer) : ObservableObject, ICancellable
+    public partial class ChartsViewModel(ICommandDispatcher commandDispatcher, IErrorVisualizerService errorVisualizer) 
+        : ObservableObject, ICancellable
     {
         private readonly ICommandDispatcher _commandDispatcher = commandDispatcher;
         private readonly IErrorVisualizerService _errorVisualizer = errorVisualizer;

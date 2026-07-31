@@ -13,11 +13,12 @@
     MaxWidth="600"
     d:DataContext="{d:DesignInstance Type=vm:ErrorViewModel,
                                      IsDesignTimeCreatable=False}"
-    Background="#F3F3F3"
+    Background="#F1F5F9"
     ResizeMode="NoResize"
     SizeToContent="Height"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

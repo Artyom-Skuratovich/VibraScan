@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using VibraScan.Application.Engines.Queries.GetEngines;
 
-namespace VibraScan.Presentation.ViewModels
+namespace VibraScan.Presentation.ViewModels.Components
 {
     public partial class EngineBriefViewModel : ObservableObject
     {

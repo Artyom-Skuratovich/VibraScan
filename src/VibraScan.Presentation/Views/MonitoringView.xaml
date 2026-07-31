@@ -5,20 +5,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ges="clr-namespace:VibraScan.Application.Engines.Queries.GetEngines;assembly=VibraScan.Application"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:m="clr-namespace:VibraScan.Presentation.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
     d:DataContext="{d:DesignInstance Type=vm:MonitoringViewModel,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Background="#F1F5F9"
     mc:Ignorable="d">
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid Background="#F1F5F9">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -52,6 +55,7 @@
                                 SelectedItem="{Binding CurrentWorkshop}"
                                 Style="{StaticResource FluentComboBox}"
                                 Tag="-- Выберите цех --">
+
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Name}" />
@@ -88,11 +92,12 @@
                         VerticalAlignment="Bottom"
                         DockPanel.Dock="Right"
                         Orientation="Horizontal">
+
                         <ToggleButton
-                            x:Name="MultiSelectToggle"
-                            Height="35"
-                            Padding="16,0"
+                            IsChecked="{Binding IsMultiSelectMode}"
+                            IsEnabled="{Binding IsWorkshopSelected}"
                             Style="{StaticResource FluentSecondaryToggleButton}">
+
                             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                 <TextBlock
                                     Margin="0,0,8,0"
@@ -105,18 +110,20 @@
                                     FontSize="13"
                                     Text="Выделить несколько" />
                             </StackPanel>
+
                         </ToggleButton>
 
                         <Button
-                            Height="35"
                             Margin="8,0,0,0"
-                            Padding="20,0"
-                            Content="Действия"
+                            Command="{Binding EditSelectedEnginesCommand}"
+                            Content="Изменить выбранные"
                             Style="{StaticResource FluentPrimaryButton}"
-                            Visibility="{Binding IsChecked, ElementName=MultiSelectToggle, Converter={StaticResource BoolToVisConverter}}">
+                            Visibility="{Binding IsMultiSelectMode, Converter={StaticResource BoolToVisConverter}}">
+
                             <Button.RenderTransform>
                                 <TranslateTransform X="0" />
                             </Button.RenderTransform>
+
                         </Button>
                     </StackPanel>
                 </DockPanel>
@@ -166,7 +173,7 @@
                                     Foreground="#64748B"
                                     Text="Состояние" />
                                 <ComboBox
-                                    ItemsSource="{Binding AvailableConditions}"
+                                    ItemsSource="{x:Static m:ConditionFilterItem.AvailableConditions}"
                                     SelectedItem="{Binding SelectedCondition}"
                                     Style="{StaticResource FluentComboBox}"
                                     Tag="-- Выберите состояние --" />

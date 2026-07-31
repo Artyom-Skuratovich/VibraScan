@@ -6,21 +6,26 @@ using VibraScan.Presentation.ViewModels.Components;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class MigrationViewModel(IWindowService windowService, IErrorVisualizerService errorVisualizerService, Func<CancellationToken, Task> migrationRunner)
-        : ObservableObject, ICancellable
+    public partial class MigrationViewModel : ObservableObject, ICancellable
     {
-        private readonly IWindowService _windowService = windowService;
-        private readonly IErrorVisualizerService _errorVisualizerService = errorVisualizerService;
-        private readonly Func<CancellationToken, Task> _migrationRunner = migrationRunner;
+        private readonly IWindowService _windowService;
+        private readonly IErrorVisualizerService _errorVisualizerService;
+        private readonly Func<CancellationToken, Task> _migrationRunner;
 
-        [ObservableProperty]
-        private string _statusText = "Выполняются миграции...";
+        public MigrationViewModel(IWindowService windowService, IErrorVisualizerService errorVisualizerService, Func<CancellationToken, Task> migrationRunner)
+        {
+            _windowService = windowService;
+            _errorVisualizerService = errorVisualizerService;
+            _migrationRunner = migrationRunner;
 
-        [ObservableProperty]
-        private string _title = "Подготовка базы данных";
+            StatusText = "Выполняются миграции...";
+            Title = "Подготовка базы данных";
+            Spinner = new();
+        }
 
-        [ObservableProperty]
-        private LoadingSpinnerViewModel _spinner = new();
+        [ObservableProperty] private string _statusText;
+        [ObservableProperty] private string _title;
+        [ObservableProperty] private LoadingSpinnerViewModel _spinner;
 
         public void Cancel()
         {

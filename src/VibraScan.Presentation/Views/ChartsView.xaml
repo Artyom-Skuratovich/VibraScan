@@ -12,6 +12,7 @@
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="1080"
     d:DesignWidth="1920"
+    Background="#F1F5F9"
     mc:Ignorable="d">
 
     <i:Interaction.Triggers>
@@ -20,7 +21,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid Background="#F1F5F9">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="280" />
             <ColumnDefinition Width="*" />

@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace VibraScan.Presentation.Views.Windows
 {
     /// <summary>
-    /// Логика взаимодействия для EngineDetailsWindow.xaml
+    /// Логика взаимодействия для EngineInspectionWindow.xaml
     /// </summary>
-    public partial class EngineDetailsWindow : Window
+    public partial class EngineInspectionWindow : Window
     {
-        public EngineDetailsWindow()
+        public EngineInspectionWindow()
         {
             InitializeComponent();
         }

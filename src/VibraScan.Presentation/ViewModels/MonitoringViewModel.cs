@@ -1,55 +1,57 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using VibraScan.Application.Common.Interfaces;
 using VibraScan.Application.Engines.Queries.GetEngines;
 using VibraScan.Application.Workshops.Queries.GetWorkshops;
 using VibraScan.Domain.Entities;
-using VibraScan.Domain.ValueObjects;
 using VibraScan.Presentation.Common.Interfaces;
+using VibraScan.Presentation.Models;
 using VibraScan.Presentation.Services.Interfaces;
+using VibraScan.Presentation.ViewModels.Components;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class MonitoringViewModel(IErrorVisualizerService errorVisualizer, ICommandDispatcher commandDispatcher) : ObservableObject, ICancellable
+    public partial class MonitoringViewModel : ObservableObject, ICancellable
     {
-        public class ConditionFilterItem(Condition? condition)
-        {
-            public Condition? Value { get; } = condition;
+        private readonly IWindowService _windowService;
+        private readonly IErrorVisualizerService _errorVisualizer;
+        private readonly ICommandDispatcher _commandDispatcher;
 
-            public override string ToString()
-            {
-                return Value?.Description ?? "Все состояния";
-            }
+        private bool _isInitialized;
+
+        public MonitoringViewModel(IWindowService windowService, IErrorVisualizerService errorVisualizer, ICommandDispatcher commandDispatcher)
+        {
+            _windowService = windowService;
+            _errorVisualizer = errorVisualizer;
+            _commandDispatcher = commandDispatcher;
+
+            _isInitialized = false;
+
+            Workshops = [];
+            Engines = [];
+            LastUpdatedTime = "--:--";
+            SelectedInspectionFilter = InspectionStatusFilter.All;
+            SelectedDateType = InspectionDateType.LastInspection;
         }
 
-        private readonly IErrorVisualizerService _errorVisualizer = errorVisualizer;
-        private readonly ICommandDispatcher _commandDispatcher = commandDispatcher;
-
-        private bool _isInitialized = false;
-
-        [ObservableProperty] private ObservableCollection<Workshop> _workshops = [];
-        [ObservableProperty] private ObservableCollection<EngineBriefViewModel> _engines = [];
-        [ObservableProperty] private string _lastUpdatedTime = "--:--";
+        [ObservableProperty] private ObservableCollection<Workshop> _workshops;
+        [ObservableProperty] private ObservableCollection<EngineBriefViewModel> _engines;
+        [ObservableProperty] private string _lastUpdatedTime;
         [ObservableProperty] private Workshop? _currentWorkshop;
         [ObservableProperty] private string? _searchText;
         [ObservableProperty] private DateTime? _dateFrom;
         [ObservableProperty] private DateTime? _dateTo;
-        [ObservableProperty] private InspectionStatusFilter _selectedInspectionFilter = InspectionStatusFilter.All;
-        [ObservableProperty] private InspectionDateType _selectedDateType = InspectionDateType.LastInspection;
+        [ObservableProperty] private InspectionStatusFilter _selectedInspectionFilter;
+        [ObservableProperty] private InspectionDateType _selectedDateType;
         [ObservableProperty] private ConditionFilterItem _selectedCondition = null!;
         [ObservableProperty] private bool _isWorkshopSelected;
+        [ObservableProperty] private bool _isMultiSelectMode;
+
+        public bool CanEditSelected => IsMultiSelectMode && Engines.Any(e => e.IsChecked);
 
         public int UrgentCheckCount => Engines.Count(e => e.Engine.NextInspectionDate.HasValue && e.Engine.NextInspectionDate <= DateTime.Today);
-
-        public IEnumerable<ConditionFilterItem> AvailableConditions { get; } = [
-            new(null),
-            new(Condition.Excellent),
-            new(Condition.Satisfactory),
-            new(Condition.Unsatisfactory),
-            new(Condition.Bad),
-            new(Condition.NotChecked)
-        ];
 
         public void Cancel()
         {
@@ -58,9 +60,20 @@ namespace VibraScan.Presentation.ViewModels
             LoadEnginesCommand.Cancel();
         }
 
+        partial void OnIsMultiSelectModeChanged(bool value)
+        {
+            foreach (var engine in Engines)
+            {
+                engine.CanCheck = value;
+            }
+
+            EditSelectedEnginesCommand.NotifyCanExecuteChanged();
+        }
+
         partial void OnCurrentWorkshopChanged(Workshop? value)
         {
             IsWorkshopSelected = value is not null;
+            IsMultiSelectMode = false;
 
             if (LoadEnginesCommand.IsRunning)
             {
@@ -104,19 +117,27 @@ namespace VibraScan.Presentation.ViewModels
 
                 var query = new GetEnginesQuery(CurrentWorkshop.Id, SearchText, SelectedCondition.Value, DateFrom, DateTo, SelectedDateType, SelectedInspectionFilter);
                 var engines = await _commandDispatcher.SendAsync(query, ct);
+
+                foreach (var oldEngine in Engines)
+                {
+                    oldEngine.PropertyChanged -= OnEngineViewModelPropertyChanged;
+                }
                 Engines.Clear();
 
                 foreach (var engine in engines)
                 {
                     var vm = new EngineBriefViewModel
                     {
-                        Engine = engine
+                        Engine = engine,
+                        CanCheck = IsMultiSelectMode
                     };
+                    vm.PropertyChanged += OnEngineViewModelPropertyChanged;
 
                     Engines.Add(vm);
                 }
 
                 OnPropertyChanged(nameof(UrgentCheckCount));
+                EditSelectedEnginesCommand.NotifyCanExecuteChanged();
                 LastUpdatedTime = DateTime.Now.ToString(@"dd.MM.yyyy \в HH:mm");
             }
             catch (OperationCanceledException)
@@ -125,6 +146,20 @@ namespace VibraScan.Presentation.ViewModels
             catch (Exception ex)
             {
                 _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке двигателей", ex);
+            }
+        }
+
+        [RelayCommand(CanExecute = nameof(CanEditSelected))]
+        private void EditSelectedEngines()
+        {
+            var engineIds = Engines.Where(e => e.IsChecked)
+                                   .Select(e => e.Engine.Id)
+                                   .ToList();
+
+            if (_windowService.ShowDialog<EngineInspectionViewModel, IEnumerable<long>>(engineIds) == true)
+            {
+                IsMultiSelectMode = false;
+                LoadEnginesCommand.Execute(null);
             }
         }
 
@@ -142,9 +177,18 @@ namespace VibraScan.Presentation.ViewModels
         private void ResetFilters()
         {
             SearchText = string.Empty;
-            SelectedCondition = AvailableConditions.First(c => c.Value is null);
+            SelectedCondition = ConditionFilterItem.AvailableConditions.First(c => c.Value is null);
             DateFrom = DateTo = null;
             SelectedInspectionFilter = InspectionStatusFilter.All;
+        }
+
+        private void OnEngineViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(EngineBriefViewModel.IsChecked))
+            {
+                OnPropertyChanged(nameof(CanEditSelected));
+                EditSelectedEnginesCommand.NotifyCanExecuteChanged();
+            }
         }
     }
 }

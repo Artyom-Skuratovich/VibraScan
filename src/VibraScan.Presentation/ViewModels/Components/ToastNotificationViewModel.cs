@@ -7,14 +7,9 @@ namespace VibraScan.Presentation.ViewModels.Components
     {
         private readonly int _delayMs = delayMs;
 
-        [ObservableProperty]
-        private string? _message;
-
-        [ObservableProperty]
-        private bool _isSuccess;
-
-        [ObservableProperty]
-        private bool _isVisible;
+        [ObservableProperty] private string? _message;
+        [ObservableProperty] private bool _isSuccess;
+        [ObservableProperty] private bool _isVisible;
 
         [RelayCommand]
         private async Task Show(CancellationToken ct)

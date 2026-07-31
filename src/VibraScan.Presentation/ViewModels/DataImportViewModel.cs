@@ -11,7 +11,8 @@ using VibraScan.Presentation.ViewModels.Components;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class DataImportViewModel(ICommandDispatcher commandDispatcher, IFileDialogService fileDialog, IErrorVisualizerService errorVisualizer) : ObservableObject, ICancellable
+    public partial class DataImportViewModel(ICommandDispatcher commandDispatcher, IFileDialogService fileDialog, IErrorVisualizerService errorVisualizer) 
+        : ObservableObject, ICancellable
     {
         private const int MaxLogCapacity = 10;
 
