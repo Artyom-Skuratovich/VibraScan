@@ -11,12 +11,13 @@ using VibraScan.Application.VibrationMeasurements.Queries.GetMeasurementDates;
 using VibraScan.Application.Workshops.Queries.GetWorkshops;
 using VibraScan.Domain.Entities;
 using VibraScan.Domain.ValueObjects;
+using VibraScan.Presentation.Common;
 using VibraScan.Presentation.Common.Interfaces;
 using VibraScan.Presentation.Services.Interfaces;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class ChartsViewModel(ICommandDispatcher commandDispatcher, IErrorVisualizerService errorVisualizer) 
+    public partial class ChartsViewModel(ICommandDispatcher commandDispatcher, IErrorVisualizerService errorVisualizer)
         : ObservableObject, ICancellable
     {
         private readonly ICommandDispatcher _commandDispatcher = commandDispatcher;
@@ -25,15 +26,10 @@ namespace VibraScan.Presentation.ViewModels
         private bool _isInitialized = false;
 
         public ObservableCollection<Workshop> Workshops { get; } = [];
-
         public ObservableCollection<EngineBriefDto> Engines { get; } = [];
-
         public ObservableCollection<Point> Points { get; } = [];
-
         public ObservableCollection<AxisType> AxisTypes { get; } = [];
-
         public ObservableCollection<DateTime> MeasurementDates { get; } = [];
-
         public ObservableCollection<MeasurementProfile> MeasurementProfiles { get; } = [];
 
         [ObservableProperty] private ChartBundle<TimeDomainChart>? _timeDomain;
@@ -188,7 +184,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке цехов", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.LoadWorkshopsFailed, ex);
             }
         }
 
@@ -214,7 +210,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке двигателей", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.LoadEnginesFailed, ex);
             }
         }
 
@@ -240,7 +236,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке точек измерения", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.LoadPointsFailed, ex);
             }
         }
 
@@ -266,7 +262,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке осей измерения", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.LoadAxisTypesFailed, ex);
             }
         }
 
@@ -292,7 +288,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке параметров измерения", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.LoadMeasurementProfilesFailed, ex);
             }
         }
 
@@ -318,7 +314,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке дат измерения", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.LoadMeasurementDatesFailed, ex);
             }
         }
 
@@ -340,7 +336,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке данных для графиков", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.LoadChartsFailed, ex);
             }
         }
     }

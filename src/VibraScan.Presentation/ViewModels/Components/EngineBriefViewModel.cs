@@ -11,10 +11,19 @@ namespace VibraScan.Presentation.ViewModels.Components
         [ObservableProperty] private bool _canCheck;
         [ObservableProperty] private bool _isVisible;
 
+        public bool IsInspectionOverdue =>
+            Engine.NextInspectionDate.HasValue &&
+            Engine.NextInspectionDate.Value.Date <= DateTime.Today;
+
         partial void OnCanCheckChanged(bool value)
         {
             IsVisible = value;
             IsChecked = false;
+        }
+
+        partial void OnEngineChanged(EngineBriefDto value)
+        {
+            OnPropertyChanged(nameof(IsInspectionOverdue));
         }
 
         [RelayCommand(CanExecute = nameof(CanCheck))]

@@ -3,7 +3,7 @@ using VibraScan.Application.DataImport;
 
 namespace VibraScan.Infrastructure.DataImport.StartImport
 {
-    public class DataImportService(IEnumerable<IEntityProcessor> processors) : IDataImportService
+    internal class DataImportService(IEnumerable<IEntityProcessor> processors) : IDataImportService
     {
         private readonly Dictionary<string, IEntityProcessor> _processors = processors.ToDictionary(p => p.EntityName);
 

@@ -12,6 +12,7 @@
     d:DataContext="{d:DesignInstance Type=vm:EngineInspectionViewModel,
                                      IsDesignTimeCreatable=False}"
     Background="#F1F5F9"
+    FontWeight="Medium"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
@@ -43,7 +44,6 @@
                 <Style x:Key="FieldHeaderStyle" TargetType="TextBlock">
                     <Setter Property="Margin" Value="2,0,0,6" />
                     <Setter Property="FontSize" Value="12" />
-                    <Setter Property="FontWeight" Value="Medium" />
                     <Setter Property="Foreground" Value="#64748B" />
                 </Style>
             </Border.Resources>
@@ -78,8 +78,50 @@
                     <DatePicker
                         IsEnabled="{Binding AllowedEditNextDate, Mode=OneWay}"
                         SelectedDate="{Binding NextInspectionDate}"
-                        Style="{StaticResource FluentDatePicker}"
-                        Tag="-- Введите дату след. проверки --" />
+                        Tag="-- Введите дату след. проверки --">
+
+                        <DatePicker.Style>
+                            <Style BasedOn="{StaticResource FluentDatePicker}" TargetType="DatePicker">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ValidationError, Converter={StaticResource StrHasValConverter}}" Value="True">
+                                        <Setter Property="BorderBrush" Value="#EF4444" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DatePicker.Style>
+
+                    </DatePicker>
+
+                    <DockPanel Margin="2,6,0,0" LastChildFill="True">
+                        <DockPanel.Style>
+                            <Style TargetType="DockPanel">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ValidationError}" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ValidationError}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DockPanel.Style>
+
+                        <Ellipse
+                            Width="5"
+                            Height="5"
+                            Margin="0,5,6,0"
+                            VerticalAlignment="Top"
+                            DockPanel.Dock="Left"
+                            Fill="#EF4444" />
+
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="Medium"
+                            Foreground="#EF4444"
+                            Text="{Binding ValidationError}"
+                            TextWrapping="Wrap" />
+                    </DockPanel>
                 </StackPanel>
 
             </StackPanel>

@@ -6,6 +6,7 @@ using VibraScan.Application.Common.Interfaces;
 using VibraScan.Application.Engines.Queries.GetEngines;
 using VibraScan.Application.Workshops.Queries.GetWorkshops;
 using VibraScan.Domain.Entities;
+using VibraScan.Presentation.Common;
 using VibraScan.Presentation.Common.Interfaces;
 using VibraScan.Presentation.Models;
 using VibraScan.Presentation.Services.Interfaces;
@@ -51,7 +52,7 @@ namespace VibraScan.Presentation.ViewModels
 
         public bool CanEditSelected => IsMultiSelectMode && Engines.Any(e => e.IsChecked);
 
-        public int UrgentCheckCount => Engines.Count(e => e.Engine.NextInspectionDate.HasValue && e.Engine.NextInspectionDate <= DateTime.Today);
+        public int UrgentCheckCount => Engines.Count(e => e.IsInspectionOverdue);
 
         public void Cancel()
         {
@@ -101,7 +102,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке цехов", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.LoadWorkshopsFailed, ex);
             }
         }
 
@@ -112,6 +113,7 @@ namespace VibraScan.Presentation.ViewModels
             {
                 if (CurrentWorkshop is null)
                 {
+                    Engines.Clear();
                     return;
                 }
 
@@ -145,7 +147,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при загрузке двигателей", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.LoadEnginesFailed, ex);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using VibraScan.Presentation.Common;
 using VibraScan.Presentation.Common.Interfaces;
 using VibraScan.Presentation.Services.Interfaces;
 using VibraScan.Presentation.ViewModels.Components;
@@ -19,12 +20,10 @@ namespace VibraScan.Presentation.ViewModels
             _migrationRunner = migrationRunner;
 
             StatusText = "Выполняются миграции...";
-            Title = "Подготовка базы данных";
             Spinner = new();
         }
 
         [ObservableProperty] private string _statusText;
-        [ObservableProperty] private string _title;
         [ObservableProperty] private LoadingSpinnerViewModel _spinner;
 
         public void Cancel()
@@ -52,7 +51,7 @@ namespace VibraScan.Presentation.ViewModels
             catch (Exception ex)
             {
                 Spinner.IsPaused = true;
-                _errorVisualizerService.ShowError("Критическая ошибка", "Ошибка при выполнении миграций", ex);
+                _errorVisualizerService.ShowError(Constants.Titles.CriticalError, Constants.Errors.MigrationExecutionFailed, ex);
                 _windowService.Shutdown();
             }
         }

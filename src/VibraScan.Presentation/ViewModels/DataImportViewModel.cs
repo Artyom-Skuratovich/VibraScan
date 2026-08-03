@@ -5,13 +5,14 @@ using System.IO;
 using VibraScan.Application.Common.Interfaces;
 using VibraScan.Application.DataImport;
 using VibraScan.Application.DataImport.Commands.StartBulkImport;
+using VibraScan.Presentation.Common;
 using VibraScan.Presentation.Common.Interfaces;
 using VibraScan.Presentation.Services.Interfaces;
 using VibraScan.Presentation.ViewModels.Components;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class DataImportViewModel(ICommandDispatcher commandDispatcher, IFileDialogService fileDialog, IErrorVisualizerService errorVisualizer) 
+    public partial class DataImportViewModel(ICommandDispatcher commandDispatcher, IFileDialogService fileDialog, IErrorVisualizerService errorVisualizer)
         : ObservableObject, ICancellable
     {
         private const int MaxLogCapacity = 10;
@@ -30,9 +31,7 @@ namespace VibraScan.Presentation.ViewModels
         private bool _isImporting;
 
         public ObservableCollection<FileItemViewModel> Files { get; } = [];
-
         public ObservableCollection<BulkImportResult> ImportHistory { get; } = [];
-
         public bool CanStartImport => Files.Count > 0 && !IsImporting;
 
         public void Cancel()
@@ -191,7 +190,7 @@ namespace VibraScan.Presentation.ViewModels
             }
             catch (Exception ex)
             {
-                _errorVisualizer.ShowError("Критическая ошибка", "Ошибка при импорте данных", ex);
+                _errorVisualizer.ShowError(Constants.Titles.CriticalError, Constants.Errors.DataImportFailed, ex);
                 ResetAllFiles(false);
             }
             finally

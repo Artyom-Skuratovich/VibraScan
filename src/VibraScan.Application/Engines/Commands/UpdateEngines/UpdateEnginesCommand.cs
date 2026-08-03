@@ -7,5 +7,6 @@ namespace VibraScan.Application.Engines.Commands.UpdateEngines
         IEnumerable<long> EngineIds,
         Condition Condition,
         DateTime? LastInspectionDate,
-        DateTime? NextInspectionDate) : IRequest;
+        DateTime? NextInspectionDate,
+        bool IsManualNextDateCalculation) : IRequest;
 }

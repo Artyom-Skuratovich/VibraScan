@@ -5,6 +5,7 @@
 
     <c:EnumToBooleanConverter x:Key="EnumToBoolConverter" />
     <c:WidthToLayoutStateConverter x:Key="WidthToLayConverter" />
+    <c:StringHasValueConverter x:Key="StrHasValConverter" />
     <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
 
 </ResourceDictionary>

@@ -53,55 +53,9 @@
 
                         <Button
                             Grid.Column="1"
-                            Padding="6"
-                            VerticalAlignment="Center"
-                            Background="Transparent"
-                            BorderThickness="0"
                             Command="{Binding LoadWorkshopsCommand}"
-                            Cursor="Hand"
-                            ToolTip="Обновить списки цехов и оборудования"
-                            ToolTipService.BetweenShowDelay="0">
-
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border
-                                                    x:Name="BtnBorder"
-                                                    Padding="{TemplateBinding Padding}"
-                                                    Background="Transparent"
-                                                    CornerRadius="6">
-                                                    <ContentPresenter />
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="BtnBorder" Property="Background" Value="#F1F5F9" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="BtnBorder" Property="Background" Value="#E2E8F0" />
-                                                    </Trigger>
-
-                                                    <Trigger Property="IsEnabled" Value="False">
-                                                        <Setter TargetName="BtnBorder" Property="Opacity" Value="0.5" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
-
-                            <Viewbox Width="16" Height="16">
-                                <Path
-                                    Data="M 12.5,4.5 C 11.23,3.23 9.46,2.5 7.5,2.5 3.91,2.5 1,5.41 1,9 c 0,3.59 2.91,6.5 6.5,6.5 2.87,0 5.3,-1.86 6.16,-4.43 M 14,1.5 l 0,4.5 -4.5,0"
-                                    Stroke="#64748B"
-                                    StrokeEndLineCap="Round"
-                                    StrokeLineJoin="Round"
-                                    StrokeStartLineCap="Round"
-                                    StrokeThickness="1.5" />
-                            </Viewbox>
-                        </Button>
+                            Style="{StaticResource RefreshButton}"
+                            ToolTip="Обновить списки цехов и оборудования" />
                     </Grid>
 
                     <TextBlock

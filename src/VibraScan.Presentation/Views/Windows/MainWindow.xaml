@@ -7,12 +7,13 @@
     xmlns:local="clr-namespace:VibraScan.Presentation.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
-    Title="MainWindow"
+    Title="Мониторинг вибродиагностики"
     Width="800"
     Height="450"
     d:DataContext="{d:DesignInstance Type=vm:MainViewModel,
                                      IsDesignTimeCreatable=False}"
     WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
     mc:Ignorable="d">
     <Grid>
         <TabControl Style="{StaticResource FluentTabControl}">

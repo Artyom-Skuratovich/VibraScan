@@ -2,7 +2,7 @@
 
 namespace VibraScan.Infrastructure.DataImport.StartImport
 {
-    public interface IEntityProcessor
+    internal interface IEntityProcessor
     {
         string EntityName { get; }
 
