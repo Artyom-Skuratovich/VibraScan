@@ -1,5 +1,7 @@
-﻿namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
+﻿using VibraScan.Domain.ValueObjects;
+
+namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
 {
-    public record TimeDomainChart(string MeasurementDomain, float Rms, float[] Values)
-        : BaseChart(MeasurementDomain, Rms, Values);
+    public record TimeDomainChart(float Rms, IReadOnlyList<float> Values)
+        : SingleMeasurementChart(MeasurementDomain.Time.Name, Rms, Values);
 }

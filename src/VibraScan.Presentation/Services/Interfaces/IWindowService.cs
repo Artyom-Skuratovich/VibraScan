@@ -12,6 +12,8 @@
 
         void Close(object model);
 
+        void Close(object model, bool? dialogResult);
+
         void Shutdown(int exitCode = 0);
     }
 }

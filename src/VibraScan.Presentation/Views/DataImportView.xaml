@@ -1,0 +1,605 @@
+﻿<UserControl
+    x:Class="VibraScan.Presentation.Views.DataImportView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:VibraScan.Presentation.Common.Helpers"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:VibraScan.Presentation.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
+    xmlns:vmc="clr-namespace:VibraScan.Presentation.ViewModels.Components"
+    d:DataContext="{d:DesignInstance Type=vm:DataImportViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="#F8FAFC"
+    mc:Ignorable="d">
+    
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Grid.Row="0"
+            Margin="0,0,0,16"
+            Padding="20"
+            Background="White"
+            BorderBrush="#E2E8F0"
+            BorderThickness="1"
+            CornerRadius="8">
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="15"
+                    Opacity="0.02"
+                    ShadowDepth="1"
+                    Color="Black" />
+            </Border.Effect>
+
+            <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                    <Button
+                        Command="{Binding SelectFilesCommand}"
+                        Content="Выбрать XML файлы"
+                        Style="{StaticResource FluentPrimaryButton}" />
+
+                    <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                        <TextBlock
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="#0F172A"
+                            Text="Импорт диагностических данных двигателей" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            FontSize="12"
+                            Foreground="#64748B"
+                            Text="Поддерживаются файл в формате (*.xml)" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel
+                    Margin="20,0,0,0"
+                    DockPanel.Dock="Right"
+                    Orientation="Horizontal">
+                    <Button
+                        Command="{Binding StartImportCommand}"
+                        Content="Запустить импорт"
+                        Style="{StaticResource FluentPrimaryButton}" />
+
+                    <Button
+                        Margin="8,0,0,0"
+                        Command="{Binding CancelImportCommand}"
+                        Content="Отмена"
+                        Style="{StaticResource FluentSecondaryButton}" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Border
+            Grid.Row="1"
+            Margin="0,0,0,16"
+            Padding="16"
+            Background="White"
+            BorderBrush="#E2E8F0"
+            BorderThickness="1"
+            CornerRadius="8">
+            <Border.LayoutTransform>
+                <ScaleTransform x:Name="PanelScale" ScaleY="0" />
+            </Border.LayoutTransform>
+
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Opacity" Value="0" />
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsImporting}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard x:Name="OpenAnimation">
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="(Border.LayoutTransform).(ScaleTransform.ScaleY)"
+                                            To="1"
+                                            Duration="0:0:0.25">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="1"
+                                            Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+
+                            <DataTrigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="OpenAnimation" />
+
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="(Border.LayoutTransform).(ScaleTransform.ScaleY)"
+                                            To="0"
+                                            Duration="0:0:0.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseIn" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="0"
+                                            Duration="0:0:0.15" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel
+                    Grid.Column="0"
+                    Margin="0,0,0,8"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        FontSize="13"
+                        FontWeight="SemiBold"
+                        Foreground="#334155"
+                        Text="Общий прогресс импорта:" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        FontSize="13"
+                        Foreground="#64748B"
+                        Text="{Binding OverallProgressText}" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        FontSize="13"
+                        FontWeight="Bold"
+                        Foreground="#2563EB"
+                        Text="{Binding CurrentFileNumber}" />
+                    <TextBlock
+                        FontSize="13"
+                        Foreground="#94A3B8"
+                        Text=" из " />
+                    <TextBlock
+                        FontSize="13"
+                        FontWeight="Bold"
+                        Foreground="#334155"
+                        Text="{Binding Files.Count}" />
+                </StackPanel>
+
+                <ProgressBar
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Height="8"
+                    Maximum="{Binding Files.Count}"
+                    Minimum="0"
+                    Style="{StaticResource FluentProgressBar}"
+                    Value="{Binding CurrentFileNumber}" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="0,0,0,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Margin="4,0,0,8"
+                FontSize="14"
+                FontWeight="SemiBold"
+                Foreground="#475569"
+                Text="Выбранные файлы для обработки" />
+
+            <Border
+                Grid.Row="1"
+                Background="White"
+                BorderBrush="#E2E8F0"
+                BorderThickness="1"
+                CornerRadius="8">
+                <ListBox
+                    Padding="8"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Center"
+                    helpers:ListBoxHelper.EnableSmartScroll="True"
+                    helpers:ListBoxHelper.ResetScrollTrigger="{Binding IsImporting}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemsSource="{Binding Files}"
+                    ScrollViewer.CanContentScroll="False"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    VirtualizingStackPanel.IsVirtualizing="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="vmc:FileItemViewModel">
+                            <Border
+                                x:Name="ItemRowContainer"
+                                Padding="6,6"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                BorderThickness="3,0,0,0">
+                                <StackPanel Orientation="Vertical">
+                                    <Grid VerticalAlignment="Center" Background="Transparent">
+                                        <Grid.InputBindings>
+                                            <MouseBinding Command="{Binding ToggleExpandCommand}" MouseAction="LeftClick" />
+                                        </Grid.InputBindings>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="14" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="250" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="180" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Path
+                                            x:Name="Arrow"
+                                            Grid.Column="0"
+                                            Width="10"
+                                            Height="10"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Data="M 0 0 L 4 4 L 8 0 Z"
+                                            Fill="#64748B"
+                                            RenderTransformOrigin="0.5,0.5"
+                                            Stretch="Uniform">
+
+                                            <Path.RenderTransform>
+                                                <RotateTransform Angle="0" />
+                                            </Path.RenderTransform>
+
+                                            <Path.Style>
+                                                <Style TargetType="Path">
+                                                    <Setter Property="Opacity" Value="0" />
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                                                            <DataTrigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation
+                                                                            Storyboard.TargetProperty="Opacity"
+                                                                            To="1"
+                                                                            Duration="0:0:0.15" />
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </DataTrigger.EnterActions>
+                                                            <DataTrigger.ExitActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation
+                                                                            Storyboard.TargetProperty="Opacity"
+                                                                            To="0"
+                                                                            Duration="0:0:0.15" />
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </DataTrigger.ExitActions>
+                                                        </DataTrigger>
+
+                                                        <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Setter Property="Opacity" Value="1" />
+                                                            <Setter Property="Fill" Value="#EF4444" />
+
+                                                            <DataTrigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation
+                                                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                                            To="180"
+                                                                            Duration="0:0:0.2" />
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </DataTrigger.EnterActions>
+                                                            <DataTrigger.ExitActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation
+                                                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                                            To="0"
+                                                                            Duration="0:0:0.2" />
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </DataTrigger.ExitActions>
+                                                        </DataTrigger>
+
+                                                        <DataTrigger Binding="{Binding IsFailure}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Setter Property="Opacity" Value="1" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Path.Style>
+                                        </Path>
+
+                                        <Path
+                                            Grid.Column="1"
+                                            Width="16"
+                                            Height="16"
+                                            Margin="4,0,10,0"
+                                            VerticalAlignment="Center"
+                                            Data="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
+                                            Fill="#3B82F6"
+                                            Stretch="Uniform" />
+
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center"
+                                            FontSize="13"
+                                            FontWeight="Medium"
+                                            Foreground="#0F172A"
+                                            Text="{Binding Name}"
+                                            TextTrimming="CharacterEllipsis" />
+
+                                        <ProgressBar
+                                            Grid.Column="3"
+                                            Margin="16,0"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center"
+                                            Maximum="100"
+                                            Minimum="0"
+                                            Style="{StaticResource FluentProgressBar}"
+                                            Value="{Binding ImportPercentage}" />
+
+                                        <TextBlock
+                                            Grid.Column="4"
+                                            Margin="0,0,16,0"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="#64748B"
+                                            Text="{Binding Stage}"
+                                            TextAlignment="Left"
+                                            TextTrimming="CharacterEllipsis" />
+
+                                        <Button
+                                            Grid.Column="5"
+                                            VerticalAlignment="Center"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Command="{Binding DataContext.RemoveFileCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                            CommandParameter="{Binding}"
+                                            Cursor="Hand">
+
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border Background="{TemplateBinding Background}">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Cursor" Value="Arrow" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+
+                                            <Path
+                                                Width="12"
+                                                Height="12"
+                                                Data="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                                                Stretch="Uniform">
+                                                <Path.Style>
+                                                    <Style TargetType="Path">
+                                                        <Setter Property="Fill" Value="#94A3B8" />
+
+                                                        <Style.Triggers>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True" />
+                                                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="True" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Fill" Value="#EF4444" />
+                                                            </MultiDataTrigger>
+
+                                                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}}" Value="False">
+                                                                <Setter Property="Fill" Value="#E2E8F0" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Path.Style>
+                                            </Path>
+                                        </Button>
+                                    </Grid>
+
+                                    <Border
+                                        x:Name="ErrorDetailsPanel"
+                                        Height="Auto"
+                                        MaxHeight="0"
+                                        Margin="0,2,0,4"
+                                        Padding="36,12,12,12"
+                                        Background="#FAFAFA"
+                                        BorderBrush="#E2E8F0"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        Cursor="Arrow">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Setter Property="Opacity" Value="0" />
+
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                                        <DataTrigger.EnterActions>
+                                                            <BeginStoryboard x:Name="OpenPanelStoryboard">
+                                                                <Storyboard>
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+                                                                    </ObjectAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetProperty="Opacity"
+                                                                        To="1"
+                                                                        Duration="0:0:0.2" />
+
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetProperty="MaxHeight"
+                                                                        To="600"
+                                                                        Duration="0:0:0.25">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.EnterActions>
+
+                                                        <DataTrigger.ExitActions>
+                                                            <StopStoryboard BeginStoryboardName="OpenPanelStoryboard" />
+
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetProperty="Opacity"
+                                                                        To="0"
+                                                                        Duration="0:0:0.12" />
+
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetProperty="MaxHeight"
+                                                                        To="0"
+                                                                        Duration="0:0:0.2">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CubicEase EasingMode="EaseIn" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Collapsed}" />
+                                                                    </ObjectAnimationUsingKeyFrames>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </DataTrigger.ExitActions>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock FontSize="11" Foreground="#991B1B">
+                                                <Run Text="ТИП ОШИБКИ:" />
+                                                <Run FontWeight="Bold" Text="{Binding Error.Type, Mode=OneWay, StringFormat=' {0}'}" />
+                                            </TextBlock>
+
+                                            <TextBox
+                                                Margin="0,4,0,0"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Focusable="True"
+                                                FontSize="12"
+                                                FontWeight="SemiBold"
+                                                Foreground="#334155"
+                                                IsReadOnly="True"
+                                                Text="{Binding Error.Message}"
+                                                TextWrapping="Wrap" />
+
+                                            <TextBox
+                                                Margin="0,8,0,0"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Focusable="True"
+                                                FontFamily="Consolas"
+                                                FontSize="11"
+                                                FontWeight="Light"
+                                                Foreground="#64748B"
+                                                IsReadOnly="True"
+                                                Text="{Binding Error.StackTrace, Mode=OneWay}"
+                                                TextWrapping="Wrap" />
+
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsFailure}" Value="True">
+                                    <Setter TargetName="ItemRowContainer" Property="Cursor" Value="Hand" />
+                                    <Setter TargetName="ItemRowContainer" Property="BorderBrush" Value="#EF4444" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" MinHeight="50" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Margin="4,0,0,8"
+                FontSize="14"
+                FontWeight="SemiBold"
+                Foreground="#475569"
+                Text="Журнал импорта" />
+
+            <Grid Grid.Row="1">
+                <Border
+                    Padding="12"
+                    Background="#0F172A"
+                    CornerRadius="8">
+
+                    <RichTextBox
+                        helpers:RichTextBoxHelper.ImportResultsSource="{Binding ImportHistory}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Focusable="True"
+                        FontFamily="Consolas"
+                        FontSize="12"
+                        Foreground="#E2E8F0"
+                        IsReadOnly="True"
+                        VerticalScrollBarVisibility="Auto" />
+                </Border>
+
+                <TextBlock
+                    Margin="0,0,35,10"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Cursor="Hand"
+                    FontSize="11"
+                    Foreground="#94A3B8">
+                    <Run Text="Очистить журнал" TextDecorations="Underline" />
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="{Binding ClearLogCommand}" MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -2,7 +2,7 @@
 
 namespace VibraScan.Infrastructure.DataImport.StartImport
 {
-    public class ImportContext
+    internal class ImportContext
     {
         private readonly Dictionary<Type, Dictionary<string, object>> _identityMap = [];
         private readonly Dictionary<Type, object> _pendingCollections = [];

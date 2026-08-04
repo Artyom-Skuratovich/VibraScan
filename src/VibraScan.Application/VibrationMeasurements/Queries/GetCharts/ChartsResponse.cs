@@ -1,6 +1,6 @@
 ﻿namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
 {
     public record ChartsResponse(
-        TimeDomainChart? TimeDomainChart,
-        FrequencyDomainChart? FrequencyDomainChart);
+        ChartBundle<TimeDomainChart>? TimeDomain,
+        ChartBundle<FrequencyDomainChart>? FrequencyDomain);
 }

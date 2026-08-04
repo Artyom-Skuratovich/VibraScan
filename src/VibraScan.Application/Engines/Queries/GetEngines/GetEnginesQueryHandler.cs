@@ -18,7 +18,8 @@ namespace VibraScan.Application.Engines.Queries.GetEngines
 
             if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
-                query = query.Where(e => e.Name.Contains(request.SearchTerm, StringComparison.CurrentCultureIgnoreCase));
+                var term = request.SearchTerm.ToLower();
+                query = query.Where(e => e.Name.ToLower().Contains(term));
             }
 
             if (request.Condition is not null)
@@ -26,17 +27,44 @@ namespace VibraScan.Application.Engines.Queries.GetEngines
                 query = query.Where(e => e.Condition == request.Condition);
             }
 
-            if (request.LastInspectionFrom.HasValue)
+            if (request.DateType == InspectionDateType.LastInspection)
             {
-                query = query.Where(e => e.LastInspectionDate >= request.LastInspectionFrom.Value);
+                if (request.InspectionFrom.HasValue)
+                {
+                    query = query.Where(e => e.LastInspectionDate != null && e.LastInspectionDate >= request.InspectionFrom.Value);
+                }
+
+                if (request.InspectionTo.HasValue)
+                {
+                    query = query.Where(e => e.LastInspectionDate != null && e.LastInspectionDate <= request.InspectionTo.Value);
+                }
+            }
+            else
+            {
+                if (request.InspectionFrom.HasValue)
+                {
+                    query = query.Where(e => e.NextInspectionDate != null && e.NextInspectionDate >= request.InspectionFrom.Value);
+                }
+
+                if (request.InspectionTo.HasValue)
+                {
+                    query = query.Where(e => e.NextInspectionDate != null && e.NextInspectionDate <= request.InspectionTo.Value);
+                }
             }
 
-            if (request.LastInspectionTo.HasValue)
+            if (request.InspectionStatus != InspectionStatusFilter.All)
             {
-                query = query.Where(e => e.LastInspectionDate <= request.LastInspectionTo.Value);
+                var today = DateTime.Today;
+
+                query = request.InspectionStatus switch
+                {
+                    InspectionStatusFilter.Valid => query.Where(e => e.NextInspectionDate.HasValue && e.NextInspectionDate >= today),
+                    InspectionStatusFilter.Overdue => query.Where(e => e.NextInspectionDate == null || e.NextInspectionDate < today),
+                    _ => query
+                };
             }
 
-            return await query.OrderBy(e => e.Name)
+            return await query.OrderBy(e => e.NextInspectionDate ?? DateTime.MaxValue)
                               .ProjectTo<EngineBriefDto>(_mapper.ConfigurationProvider)
                               .ToListAsync(ct);
         }

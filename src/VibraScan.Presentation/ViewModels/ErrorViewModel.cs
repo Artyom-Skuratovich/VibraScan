@@ -1,28 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using VibraScan.Presentation.Models;
 using VibraScan.Presentation.Services.Interfaces;
-using VibraScan.Presentation.ViewModels.Models;
+using VibraScan.Presentation.ViewModels.Components;
 
 namespace VibraScan.Presentation.ViewModels
 {
     public partial class ErrorViewModel : ObservableObject
     {
         private readonly IClipboardService _clipboard;
-
-        [ObservableProperty]
-        private string _title;
-
-        [ObservableProperty]
-        private string _message;
-
-        [ObservableProperty]
-        private string? _stackTrace;
-
-        [ObservableProperty]
-        private bool _hasDetails;
-
-        [ObservableProperty]
-        public ToastNotification _currentToast;
 
         public ErrorViewModel(ErrorParameters parameters, IClipboardService clipboard)
         {
@@ -34,9 +20,15 @@ namespace VibraScan.Presentation.ViewModels
                 StackTrace = parameters.Exception.ToString();
                 HasDetails = true;
             }
-            CurrentToast = new ToastNotification();
+            CurrentToast = new ToastNotificationViewModel();
             _clipboard = clipboard;
         }
+
+        [ObservableProperty] private string _title;
+        [ObservableProperty] private string _message;
+        [ObservableProperty] private string? _stackTrace;
+        [ObservableProperty] private bool _hasDetails;
+        [ObservableProperty] private ToastNotificationViewModel _currentToast;
 
         [RelayCommand(CanExecute = nameof(HasDetails), AllowConcurrentExecutions = true)]
         private async Task CopyToClipboard()

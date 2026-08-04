@@ -1,26 +1,30 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using VibraScan.Presentation.Common;
 using VibraScan.Presentation.Common.Interfaces;
 using VibraScan.Presentation.Services.Interfaces;
-using VibraScan.Presentation.ViewModels.Models;
+using VibraScan.Presentation.ViewModels.Components;
 
 namespace VibraScan.Presentation.ViewModels
 {
-    public partial class MigrationViewModel(IWindowService windowService, IErrorVisualizerService errorVisualizerService, Func<CancellationToken, Task> migrationRunner)
-        : ObservableObject, ISupportCancellation
+    public partial class MigrationViewModel : ObservableObject, ICancellable
     {
-        private readonly IWindowService _windowService = windowService;
-        private readonly IErrorVisualizerService _errorVisualizerService = errorVisualizerService;
-        private readonly Func<CancellationToken, Task> _migrationRunner = migrationRunner;
+        private readonly IWindowService _windowService;
+        private readonly IErrorVisualizerService _errorVisualizerService;
+        private readonly Func<CancellationToken, Task> _migrationRunner;
 
-        [ObservableProperty]
-        private string _statusText = "Выполняются миграции...";
+        public MigrationViewModel(IWindowService windowService, IErrorVisualizerService errorVisualizerService, Func<CancellationToken, Task> migrationRunner)
+        {
+            _windowService = windowService;
+            _errorVisualizerService = errorVisualizerService;
+            _migrationRunner = migrationRunner;
 
-        [ObservableProperty]
-        private string _title = "Подготовка базы данных";
+            StatusText = "Выполняются миграции...";
+            Spinner = new();
+        }
 
-        [ObservableProperty]
-        private LoadingSpinner _spinner = new();
+        [ObservableProperty] private string _statusText;
+        [ObservableProperty] private LoadingSpinnerViewModel _spinner;
 
         public void Cancel()
         {
@@ -47,7 +51,7 @@ namespace VibraScan.Presentation.ViewModels
             catch (Exception ex)
             {
                 Spinner.IsPaused = true;
-                _errorVisualizerService.ShowError("Критическая ошибка", "Ошибка при выполнении миграций", ex);
+                _errorVisualizerService.ShowError(Constants.Titles.CriticalError, Constants.Errors.MigrationExecutionFailed, ex);
                 _windowService.Shutdown();
             }
         }

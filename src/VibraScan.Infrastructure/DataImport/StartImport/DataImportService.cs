@@ -3,7 +3,7 @@ using VibraScan.Application.DataImport;
 
 namespace VibraScan.Infrastructure.DataImport.StartImport
 {
-    public class DataImportService(IEnumerable<IEntityProcessor> processors) : IDataImportService
+    internal class DataImportService(IEnumerable<IEntityProcessor> processors) : IDataImportService
     {
         private readonly Dictionary<string, IEntityProcessor> _processors = processors.ToDictionary(p => p.EntityName);
 
@@ -36,7 +36,9 @@ namespace VibraScan.Infrastructure.DataImport.StartImport
                             progress.Report(new ImportProgress(CalculateProgress(collCount), $"Обработка коллекции {entityName}..."));
                             await ProcessCurrentEntitiesAsync(reader, processor, context, ct);
 
-                            progress.Report(new ImportProgress(CalculateProgress(collCount += ProcessingRatio), $"Отправка коллекции {entityName} в БД"));
+                            collCount += ProcessingRatio;
+                            progress.Report(new ImportProgress(CalculateProgress(collCount), $"Отправка коллекции {entityName} в БД"));
+
                             await processor.CommitAsync(context, ct);
                             collCount += CommitRatio;
                         }

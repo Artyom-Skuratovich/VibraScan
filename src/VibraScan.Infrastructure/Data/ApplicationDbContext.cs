@@ -11,17 +11,11 @@ namespace VibraScan.Infrastructure.Data
         private IDbContextTransaction? _currentTransaction;
 
         public DbSet<Engine> Engines => Set<Engine>();
-
         public DbSet<InspectionInterval> InspectionIntervals => Set<InspectionInterval>();
-
         public DbSet<InspectionRule> InspectionRules => Set<InspectionRule>();
-
         public DbSet<MeasurementProfile> MeasurementProfiles => Set<MeasurementProfile>();
-
-        public DbSet<Point> Points => throw new NotImplementedException();
-
+        public DbSet<Point> Points => Set<Point>();
         public DbSet<VibrationMeasurement> VibrationMeasurements => Set<VibrationMeasurement>();
-
         public DbSet<Workshop> Workshops => Set<Workshop>();
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -70,8 +64,6 @@ namespace VibraScan.Infrastructure.Data
             }
             catch
             {
-                // Игнорируем (например, при разрыве соединения с БД).
-                // Сервер БД закроет транзакцию автоматически.
             }
             finally
             {

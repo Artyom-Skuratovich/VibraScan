@@ -23,7 +23,7 @@ namespace VibraScan.Infrastructure.Data
 
         public async Task InitializeAsync(CancellationToken ct)
         {
-            await _context.Database.EnsureCreatedAsync(ct);
+            await _context.Database.MigrateAsync(ct);
         }
 
         public async Task SeedAsync(CancellationToken ct)

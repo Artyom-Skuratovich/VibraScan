@@ -25,19 +25,19 @@
             return hash.ToHashCode();
         }
 
-        public static bool operator ==(ValueObject left, ValueObject right)
+        public static bool operator ==(ValueObject? left, ValueObject? right)
         {
             return EqualOperator(left, right);
         }
 
-        public static bool operator !=(ValueObject left, ValueObject right)
+        public static bool operator !=(ValueObject? left, ValueObject? right)
         {
             return NotEqualOperator(left, right);
         }
 
         protected abstract IEnumerable<object> GetEqualityComponents();
 
-        protected static bool EqualOperator(ValueObject left, ValueObject right)
+        protected static bool EqualOperator(ValueObject? left, ValueObject? right)
         {
             if (left is null ^ right is null)
             {
@@ -47,7 +47,7 @@
             return left?.Equals(right) != false;
         }
 
-        protected static bool NotEqualOperator(ValueObject left, ValueObject right)
+        protected static bool NotEqualOperator(ValueObject? left, ValueObject? right)
         {
             return !EqualOperator(left, right);
         }

@@ -1,0 +1,454 @@
+﻿<UserControl
+    x:Class="VibraScan.Presentation.Views.MonitoringView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ges="clr-namespace:VibraScan.Application.Engines.Queries.GetEngines;assembly=VibraScan.Application"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:m="clr-namespace:VibraScan.Presentation.Models"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:VibraScan.Presentation.ViewModels"
+    d:DataContext="{d:DesignInstance Type=vm:MonitoringViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="#F1F5F9"
+    mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Padding="24"
+            Background="#F8FAFC"
+            BorderBrush="#E2E8F0"
+            BorderThickness="0,0,0,1">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,16" LastChildFill="False">
+                    <StackPanel DockPanel.Dock="Left">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Column="0"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Foreground="#0F172A"
+                                Text="Мониторинг состояния двигателей цеха" />
+
+                            <Button
+                                Grid.Column="1"
+                                Margin="10,0,0,0"
+                                Command="{Binding LoadWorkshopsCommand}"
+                                Style="{StaticResource RefreshButton}"
+                                ToolTip="Обновить списки цехов" />
+                        </Grid>
+                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                Foreground="#64748B"
+                                Text="Цех:" />
+
+                            <ComboBox
+                                MinWidth="160"
+                                Margin="8,0,0,0"
+                                ItemsSource="{Binding Workshops}"
+                                SelectedItem="{Binding CurrentWorkshop}"
+                                Style="{StaticResource FluentComboBox}"
+                                Tag="-- Выберите цех --">
+
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <Border
+                                Height="26"
+                                Margin="12,0,0,0"
+                                Padding="10,0"
+                                VerticalAlignment="Center"
+                                Background="#E2E8F0"
+                                CornerRadius="5">
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        Foreground="#475569"
+                                        Text="Текущий: " />
+
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="11"
+                                        FontWeight="SemiBold"
+                                        Foreground="#0F172A"
+                                        Text="{Binding CurrentWorkshop.Name, FallbackValue='—', TargetNullValue='—'}" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel
+                        VerticalAlignment="Bottom"
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal">
+
+                        <ToggleButton
+                            IsChecked="{Binding IsMultiSelectMode}"
+                            IsEnabled="{Binding IsWorkshopSelected}"
+                            Style="{StaticResource FluentSecondaryToggleButton}">
+
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="12"
+                                    Text="&#xE762;" />
+                                <TextBlock
+                                    x:Name="SelectionState"
+                                    VerticalAlignment="Center"
+                                    FontSize="13">
+
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="Выделить несколько" />
+
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                                                    <Setter Property="Text" Value="Убрать выделение" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+
+                                        </Style>
+                                    </TextBlock.Style>
+
+                                </TextBlock>
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <Button
+                            Margin="8,0,0,0"
+                            Command="{Binding EditSelectedEnginesCommand}"
+                            Content="Изменить выбранные"
+                            Style="{StaticResource FluentPrimaryButton}"
+                            Visibility="{Binding IsMultiSelectMode, Converter={StaticResource BoolToVisConverter}}">
+
+                            <Button.RenderTransform>
+                                <TranslateTransform X="0" />
+                            </Button.RenderTransform>
+
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+
+                <Border
+                    Padding="16"
+                    Background="White"
+                    BorderBrush="#E2E8F0"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                    
+                    <Border.Effect>
+                        <DropShadowEffect
+                            BlurRadius="10"
+                            Opacity="0.03"
+                            ShadowDepth="1"
+                            Color="Black" />
+                    </Border.Effect>
+
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.2*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="2.2*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                <TextBlock
+                                    Margin="2,0,0,6"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    Foreground="#64748B"
+                                    Text="Название" />
+                                <TextBox
+                                    Style="{StaticResource FluentTextBox}"
+                                    Tag="-- Введите название --"
+                                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="0,0,16,0">
+                                <TextBlock
+                                    Margin="2,0,0,6"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    Foreground="#64748B"
+                                    Text="Состояние" />
+                                <ComboBox
+                                    ItemsSource="{x:Static m:ConditionFilterItem.AvailableConditions}"
+                                    SelectedItem="{Binding SelectedCondition}"
+                                    Style="{StaticResource FluentComboBox}"
+                                    Tag="-- Выберите состояние --" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Margin="0,0,16,0">
+                                <ComboBox
+                                    Margin="2,0,0,6"
+                                    HorizontalAlignment="Left"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    Foreground="#64748B"
+                                    SelectedValue="{Binding SelectedDateType}"
+                                    SelectedValuePath="Tag"
+                                    Style="{StaticResource FluentComboBoxBadge}">
+                                    <ComboBoxItem Content="Последняя проверка" Tag="{x:Static ges:InspectionDateType.LastInspection}" />
+                                    <ComboBoxItem Content="Следующая проверка" Tag="{x:Static ges:InspectionDateType.NextInspection}" />
+                                </ComboBox>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <DatePicker
+                                        Grid.Column="0"
+                                        SelectedDate="{Binding DateFrom}"
+                                        Style="{StaticResource FluentDatePicker}"
+                                        Tag="-- От --" />
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="8,0"
+                                        VerticalAlignment="Center"
+                                        FontWeight="Light"
+                                        Foreground="#94A3B8"
+                                        Text="—" />
+
+                                    <DatePicker
+                                        Grid.Column="2"
+                                        SelectedDate="{Binding DateTo}"
+                                        Style="{StaticResource FluentDatePicker}"
+                                        Tag="-- До --" />
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel
+                                Grid.Column="3"
+                                Margin="0,0,16,0"
+                                Grid.IsSharedSizeScope="True">
+                                <StackPanel.Resources>
+                                    <Style BasedOn="{StaticResource FluentRadioButton}" TargetType="RadioButton">
+                                        <Setter Property="GroupName" Value="InspectionFilter" />
+                                        <Setter Property="Margin" Value="0,0,4,0" />
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" SharedSizeGroup="InspectionFilterGroup" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <ContentPresenter HorizontalAlignment="Center" Content="{Binding}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </StackPanel.Resources>
+
+                                <TextBlock
+                                    Margin="2,0,0,6"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    Foreground="#64748B"
+                                    Text="Срок проверки" />
+
+                                <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal">
+                                    <RadioButton Content="Всё" IsChecked="{Binding SelectedInspectionFilter, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static ges:InspectionStatusFilter.All}}" />
+
+                                    <RadioButton Content="Истёк" IsChecked="{Binding SelectedInspectionFilter, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static ges:InspectionStatusFilter.Overdue}}" />
+
+                                    <RadioButton
+                                        Margin="0"
+                                        Content="В норме"
+                                        IsChecked="{Binding SelectedInspectionFilter, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static ges:InspectionStatusFilter.Valid}}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <Button
+                                Grid.Column="4"
+                                Padding="24,0"
+                                VerticalAlignment="Bottom"
+                                Command="{Binding LoadEnginesCommand}"
+                                Style="{StaticResource FluentPrimaryButton}">
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,8,0"
+                                        VerticalAlignment="Center"
+                                        FontFamily="Segoe MDL2 Assets"
+                                        FontSize="12"
+                                        Text="&#xE721;" />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="13"
+                                        FontWeight="SemiBold"
+                                        Text="Найти" />
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <StackPanel Margin="2,20,0,0" Orientation="Horizontal">
+                            <TextBlock
+                                Margin="0,0,16,0"
+                                VerticalAlignment="Center"
+                                FontSize="10"
+                                FontWeight="Bold"
+                                Foreground="#94A3B8"
+                                Text="СТАТУСЫ"
+                                Typography.Capitals="AllSmallCaps" />
+
+                            <ItemsControl>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.Items>
+                                    <StackPanel Margin="0,0,20,0" Orientation="Horizontal">
+                                        <Ellipse
+                                            Width="6"
+                                            Height="6"
+                                            VerticalAlignment="Center"
+                                            Fill="#22C55E" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            FontSize="12"
+                                            Foreground="#475569"
+                                            Text="Отлично" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,20,0" Orientation="Horizontal">
+                                        <Ellipse
+                                            Width="6"
+                                            Height="6"
+                                            VerticalAlignment="Center"
+                                            Fill="#EAB308" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            FontSize="12"
+                                            Foreground="#475569"
+                                            Text="Удовл." />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,20,0" Orientation="Horizontal">
+                                        <Ellipse
+                                            Width="6"
+                                            Height="6"
+                                            VerticalAlignment="Center"
+                                            Fill="#F97316" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            FontSize="12"
+                                            Foreground="#475569"
+                                            Text="Неудовл." />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,20,0" Orientation="Horizontal">
+                                        <Ellipse
+                                            Width="6"
+                                            Height="6"
+                                            VerticalAlignment="Center"
+                                            Fill="#EF4444" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            FontSize="12"
+                                            Foreground="#475569"
+                                            Text="Плохо" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse
+                                            Width="6"
+                                            Height="6"
+                                            VerticalAlignment="Center"
+                                            Fill="#3B82F6" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            FontSize="12"
+                                            Foreground="#475569"
+                                            Text="Нет данных" />
+                                    </StackPanel>
+                                </ItemsControl.Items>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer
+            Grid.Row="1"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+            <ItemsControl Margin="20" ItemsSource="{Binding Engines}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel
+                            HorizontalAlignment="Center"
+                            IsItemsHost="True"
+                            Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Margin" Value="4" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Border
+            Grid.Row="2"
+            Padding="20,10"
+            Background="White"
+            BorderBrush="#E2E8F0"
+            BorderThickness="0,1,0,0">
+            <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                    <TextBlock
+                        FontSize="12"
+                        Foreground="#64748B"
+                        Text="{Binding Engines.Count, StringFormat='Всего двигателей: {0}'}" />
+                    <Separator Margin="15,2" Background="#E2E8F0" />
+                    <TextBlock
+                        FontSize="12"
+                        FontWeight="SemiBold"
+                        Foreground="#EF4444"
+                        Text="{Binding UrgentCheckCount, StringFormat='Требуют срочной проверки: {0}'}" />
+                </StackPanel>
+                <TextBlock
+                    DockPanel.Dock="Right"
+                    FontSize="12"
+                    Foreground="#94A3B8"
+                    Text="{Binding LastUpdatedTime, StringFormat='Обновлено: {0}'}" />
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,11 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:VibraScan.Presentation.Common.Converters">
+
+    <c:EnumToBooleanConverter x:Key="EnumToBoolConverter" />
+    <c:WidthToLayoutStateConverter x:Key="WidthToLayConverter" />
+    <c:StringHasValueConverter x:Key="StrHasValConverter" />
+    <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+
+</ResourceDictionary>

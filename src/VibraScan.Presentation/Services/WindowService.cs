@@ -20,9 +20,31 @@ namespace VibraScan.Presentation.Services
 
         public void Close(object model)
         {
+            Close(model, null);
+        }
+
+        public void Close(object model, bool? dialogResult)
+        {
             if (_openWindows.TryGetValue(model, out var entry))
             {
-                entry.Window.Dispatcher.Invoke(entry.Window.Close);
+                entry.Window.Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        if (dialogResult.HasValue)
+                        {
+                            entry.Window.DialogResult = dialogResult.Value;
+                        }
+                        else
+                        {
+                            entry.Window.Close();
+                        }
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        entry.Window.Close();
+                    }
+                });
             }
         }
 
@@ -131,7 +153,7 @@ namespace VibraScan.Presentation.Services
 
         private void ConfigureWindowLifeCycle(Window window, object model)
         {
-            if (model is ISupportCancellation cancelable)
+            if (model is ICancellable cancelable)
             {
                 window.Closing += (s, e) => cancelable.Cancel();
             }
