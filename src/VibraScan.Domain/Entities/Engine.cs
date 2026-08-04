@@ -1,5 +1,4 @@
 ﻿using VibraScan.Domain.Common;
-using VibraScan.Domain.Exceptions;
 using VibraScan.Domain.ValueObjects;
 
 namespace VibraScan.Domain.Entities
@@ -17,16 +16,5 @@ namespace VibraScan.Domain.Entities
         public long WorkshopId { get; set; }
 
         public long? InspectionRuleId { get; set; }
-
-        public void ApplyInspection(DateTime inspectionDate, Condition condition, InspectionRule rule)
-        {
-            var interval = rule.Intervals.FirstOrDefault(i => i.TargetCondition == condition) ??
-                throw new InspectionIntervalNotFoundException(rule.Name, condition);
-
-            LastInspectionDate = inspectionDate;
-            Condition = condition;
-            NextInspectionDate = inspectionDate.AddDays(interval.DaysCount);
-            InspectionRuleId = rule.Id;
-        }
     }
 }
