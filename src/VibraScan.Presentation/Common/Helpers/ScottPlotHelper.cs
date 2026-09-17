@@ -13,8 +13,9 @@ namespace VibraScan.Presentation.Common.Helpers
     public static class ScottPlotHelper
     {
         private const float MarkerRadius = 12f;
-        private const float ToolTipMaxXDistance = 15f;
-        private const float ToolTipMaxYDistance = 20f;
+        private const float HighlightMarkerSize = 10f;
+        private const float ToolTipMaxXDistance = 30f;
+        private const float ToolTipMaxYDistance = 40f;
 
         private static readonly CustomInterpolated TemperatureColormap = new([
             Color.FromHex("#10B981"),
@@ -73,11 +74,35 @@ namespace VibraScan.Presentation.Common.Helpers
                     signal.Color = Color.FromHex("#2563EB");
                     signal.LineWidth = 1;
 
+                    CreateHighlightMarker(plot);
+
                     plot.Plot.Axes.Margins(0, 0.1);
                 }
 
                 plot.Refresh();
             }
+        }
+
+        private static void CreateHighlightMarker(WpfPlot plot)
+        {
+            var marker = plot.Plot.Add.Marker(0, 0);
+            marker.Shape = MarkerShape.FilledCircle;
+            marker.Size = HighlightMarkerSize;
+            marker.Color = Color.FromHex("#2563EB");
+            marker.IsVisible = false;
+        }
+
+        private static void UpdateHighlightMarker(Marker marker, double x, double y, bool isVisible, WpfPlot plot)
+        {
+            if ((marker.IsVisible == isVisible) && (marker.Position.X == x) && (marker.Position.Y == y))
+            {
+                return;
+            }
+
+            marker.Position = new Coordinates(x, y);
+            marker.IsVisible = isVisible;
+
+            plot.Refresh();
         }
 
         private static void WpfPlotSignalMouseMove(object sender, MouseEventArgs e)
@@ -93,7 +118,9 @@ namespace VibraScan.Presentation.Common.Helpers
             }
 
             var signal = plot.Plot.GetPlottables<Signal>().FirstOrDefault();
-            if (signal == null) return;
+            var marker = plot.Plot.GetPlottables<Marker>().FirstOrDefault();
+
+            if ((signal == null) || (marker == null)) return;
 
             var mousePos = e.GetPosition(plot);
             var mousePixel = new Pixel((float)mousePos.X, (float)mousePos.Y);
@@ -106,16 +133,20 @@ namespace VibraScan.Presentation.Common.Helpers
 
             if ((index >= 0) && (index < data.Count))
             {
-                var pointPixel = plot.Plot.GetPixel(new Coordinates(index * xStep + xOffset, data[index]));
+                var x = index * xStep + xOffset;
+                var pointPixel = plot.Plot.GetPixel(new Coordinates(x, data[index]));
 
                 if ((Math.Abs(mousePixel.X - pointPixel.X) < ToolTipMaxXDistance) && (Math.Abs(mousePixel.Y - pointPixel.Y) < ToolTipMaxYDistance))
                 {
                     ShowPlotToolTip(plot, mousePos, $"y={data[index]} x={index}");
+                    UpdateHighlightMarker(marker, x, data[index], true, plot);
+
                     return;
                 }
             }
 
             HidePlotToolTip(plot);
+            UpdateHighlightMarker(marker, 0, 0, false, plot);
         }
 
         private static void ShowPlotToolTip(WpfPlot plot, Point mousePosition, string text)
