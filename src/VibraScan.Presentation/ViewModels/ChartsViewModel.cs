@@ -308,6 +308,8 @@ namespace VibraScan.Presentation.ViewModels
                 {
                     MeasurementDates.Add(date);
                 }
+
+                SelectedMeasurementDate = MeasurementDates.LastOrDefault();
             }
             catch (OperationCanceledException)
             {

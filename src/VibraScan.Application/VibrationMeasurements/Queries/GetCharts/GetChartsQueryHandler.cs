@@ -9,6 +9,7 @@ namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
 {
     public class GetChartsQueryHandler(IApplicationDbContext context) : IRequestHandler<GetChartsQuery, ChartsResponse?>
     {
+        private const float MillimeterScaleFactor = 1000f;
         private readonly IApplicationDbContext _context = context;
 
         private record HistoryItem(MeasurementDomain MeasurementDomain, DateTime CapturedAt, float Rms);
@@ -24,8 +25,11 @@ namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
 
             var rmsHistory = await GetRmsHistoryAsync(request, ct);
 
-            var timeBundle = CreateBundle<TimeDomainChart>(measurements, rmsHistory, MeasurementDomain.Time);
             var freqBundle = CreateBundle<FrequencyDomainChart>(measurements, rmsHistory, MeasurementDomain.Frequency);
+
+            var scaleFactor = freqBundle is null ? MillimeterScaleFactor : 1f;
+
+            var timeBundle = CreateBundle<TimeDomainChart>(measurements, rmsHistory, MeasurementDomain.Time, scaleFactor);
 
             return new ChartsResponse(timeBundle, freqBundle);
         }
@@ -53,7 +57,11 @@ namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
                 .ToListAsync(ct);
         }
 
-        private static ChartBundle<T>? CreateBundle<T>(IEnumerable<VibrationMeasurement> measurements, IEnumerable<HistoryItem> historyItems, MeasurementDomain domain)
+        private static ChartBundle<T>? CreateBundle<T>(
+            IEnumerable<VibrationMeasurement> measurements,
+            IEnumerable<HistoryItem> historyItems,
+            MeasurementDomain domain,
+            float scaleFactor = 1f)
             where T : SingleMeasurementChart
         {
             var measurement = measurements.FirstOrDefault(m => m.MeasurementDomain == domain);
@@ -63,13 +71,13 @@ namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
                 return null;
             }
 
-            var measurementChart = MapToSingleMeasurementChart(measurement) as T;
-            var rmsHistoryChart = MapToHistoryChart(historyItems, domain);
+            var measurementChart = MapToSingleMeasurementChart(measurement, scaleFactor) as T;
+            var rmsHistoryChart = MapToHistoryChart(historyItems, domain, scaleFactor);
 
             return new ChartBundle<T>(measurementChart!, rmsHistoryChart!);
         }
 
-        private static SingleMeasurementChart? MapToSingleMeasurementChart(VibrationMeasurement measurement)
+        private static SingleMeasurementChart? MapToSingleMeasurementChart(VibrationMeasurement measurement, float scaleFactor = 1f)
         {
             if ((measurement.RawData == null) || (measurement.RawData.Length == 0))
             {
@@ -78,20 +86,25 @@ namespace VibraScan.Application.VibrationMeasurements.Queries.GetCharts
 
             var values = MemoryMarshal.Cast<byte, float>(measurement.RawData).ToArray();
 
+            for (int i = 0; i < values.Length && (scaleFactor != 1f); i++)
+            {
+                values[i] *= scaleFactor;
+            }
+
             if (measurement.MeasurementDomain == MeasurementDomain.Frequency)
             {
                 var range = CalculateAmplitudeRange(values);
-                return new FrequencyDomainChart(measurement.Rms, values, range);
+                return new FrequencyDomainChart(measurement.Rms * scaleFactor, values, range);
             }
 
-            return new TimeDomainChart(measurement.Rms, values);
+            return new TimeDomainChart(measurement.Rms * scaleFactor, values);
         }
 
-        private static RmsHistoryChart? MapToHistoryChart(IEnumerable<HistoryItem> historyItems, MeasurementDomain domain)
+        private static RmsHistoryChart? MapToHistoryChart(IEnumerable<HistoryItem> historyItems, MeasurementDomain domain, float scaleFactor = 1f)
         {
             var points = historyItems
                 .Where(h => h.MeasurementDomain == domain)
-                .Select(h => new RmsHistoryPoint(h.CapturedAt, h.Rms))
+                .Select(h => new RmsHistoryPoint(h.CapturedAt, h.Rms * scaleFactor))
                 .ToList();
 
             return points.Count > 0 ? new RmsHistoryChart(points) : null;
