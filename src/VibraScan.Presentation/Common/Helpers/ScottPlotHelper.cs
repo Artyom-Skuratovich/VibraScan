@@ -4,6 +4,7 @@ using ScottPlot.Panels;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using VibraScan.Application.VibrationMeasurements.Queries.GetCharts;
 
@@ -12,6 +13,8 @@ namespace VibraScan.Presentation.Common.Helpers
     public static class ScottPlotHelper
     {
         private const float MarkerRadius = 12f;
+        private const float ToolTipMaxXDistance = 15f;
+        private const float ToolTipMaxYDistance = 20f;
 
         private static readonly CustomInterpolated TemperatureColormap = new([
             Color.FromHex("#10B981"),
@@ -53,10 +56,14 @@ namespace VibraScan.Presentation.Common.Helpers
         public static float GetMaxRms(DependencyObject obj) => (float)obj.GetValue(MaxRmsProperty);
         public static void SetMaxRms(DependencyObject obj, float value) => obj.SetValue(MaxRmsProperty, value);
 
+        #region PlotData
+
         private static void OnPlotDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is WpfPlot plot)
             {
+                EnsureMouseTrackingInitialized(plot, WpfPlotSignalMouseMove);
+
                 plot.Plot.Clear();
 
                 if (e.NewValue is IReadOnlyList<float> data && (data.Count > 0))
@@ -73,12 +80,80 @@ namespace VibraScan.Presentation.Common.Helpers
             }
         }
 
+        private static void WpfPlotSignalMouseMove(object sender, MouseEventArgs e)
+        {
+            if (sender is not WpfPlot plot) return;
+
+            var data = GetPlotData(plot);
+
+            if ((data == null) || (data.Count == 0))
+            {
+                HidePlotToolTip(plot);
+                return;
+            }
+
+            var signal = plot.Plot.GetPlottables<Signal>().FirstOrDefault();
+            if (signal == null) return;
+
+            var mousePos = e.GetPosition(plot);
+            var mousePixel = new Pixel((float)mousePos.X, (float)mousePos.Y);
+            var mouseCoord = plot.Plot.GetCoordinates(mousePixel);
+
+            var xOffset = signal.Data.XOffset;
+            var xStep = signal.Data.Period;
+
+            var index = (int)Math.Round((mouseCoord.X - xOffset) / xStep);
+
+            if ((index >= 0) && (index < data.Count))
+            {
+                var pointPixel = plot.Plot.GetPixel(new Coordinates(index * xStep + xOffset, data[index]));
+
+                if ((Math.Abs(mousePixel.X - pointPixel.X) < ToolTipMaxXDistance) && (Math.Abs(mousePixel.Y - pointPixel.Y) < ToolTipMaxYDistance))
+                {
+                    ShowPlotToolTip(plot, mousePos, $"y={data[index]} x={index}");
+                    return;
+                }
+            }
+
+            HidePlotToolTip(plot);
+        }
+
+        private static void ShowPlotToolTip(WpfPlot plot, Point mousePosition, string text)
+        {
+            if (plot.ToolTip is not ToolTip tooltip)
+            {
+                tooltip = new ToolTip
+                {
+                    Placement = System.Windows.Controls.Primitives.PlacementMode.Relative,
+                    PlacementTarget = plot
+                };
+                plot.ToolTip = tooltip;
+            }
+
+            tooltip.Content = text;
+            tooltip.HorizontalOffset = mousePosition.X + 15;
+            tooltip.VerticalOffset = mousePosition.Y + 15;
+            tooltip.IsOpen = true;
+        }
+
+        private static void HidePlotToolTip(WpfPlot plot)
+        {
+            if (plot.ToolTip is ToolTip tooltip)
+            {
+                tooltip.IsOpen = false;
+            }
+        }
+
+        #endregion
+
+        #region PlotHistoryData
+
         private static void OnPlotHistoryDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is WpfPlot plot)
             {
                 EnsureColorBarInitialized(plot);
-                EnsureMouseTrackingInitialized(plot);
+                EnsureMouseTrackingInitialized(plot, WpfPlotMouseMove);
 
                 plot.Plot.Clear();
 
@@ -115,11 +190,6 @@ namespace VibraScan.Presentation.Common.Helpers
             colorbar.Edge = Edge.Right;
         }
 
-        private static void EnsureMouseTrackingInitialized(WpfPlot plot)
-        {
-            plot.MouseMove -= WpfPlotMouseMove;
-            plot.MouseMove += WpfPlotMouseMove;
-        }
 
         private static void DrawHistoryMarkers(WpfPlot plot, IReadOnlyList<RmsHistoryPoint> data)
         {
@@ -238,6 +308,14 @@ namespace VibraScan.Presentation.Common.Helpers
             }
 
             return (closestPoint is not null) && (minPixelDistance <= MarkerRadius);
+        }
+
+        #endregion
+
+        private static void EnsureMouseTrackingInitialized(WpfPlot plot, MouseEventHandler moveHandler)
+        {
+            plot.MouseMove -= moveHandler;
+            plot.MouseMove += moveHandler;
         }
     }
 }
