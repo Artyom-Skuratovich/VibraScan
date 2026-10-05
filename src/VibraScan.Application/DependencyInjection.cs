@@ -11,7 +11,7 @@ namespace VibraScan.Application
     {
         public static void AddApplicationServices(this IServiceCollection services)
         {
-            services.AddMemoryCache();
+            services.AddMemoryCache(o => o.SizeLimit = 20);
             services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
             services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
             services.AddMediatR(cfg =>

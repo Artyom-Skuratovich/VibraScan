@@ -5,7 +5,7 @@ using VibraScan.Application.Common.Interfaces;
 namespace VibraScan.Application.Common.Behaviors
 {
     public class CachingBehavior<TRequest, TResponse>(IMemoryCache cache) : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+        where TRequest : IRequest<TResponse>, ICachableQuery
     {
         private readonly IMemoryCache _cache = cache;
 
@@ -25,7 +25,8 @@ namespace VibraScan.Application.Common.Behaviors
 
             var cacheOptions = new MemoryCacheEntryOptions
             {
-                SlidingExpiration = cachableQuery.ExpirationTime
+                SlidingExpiration = cachableQuery.ExpirationTime,
+                Size = 1
             };
 
             _cache.Set(cachableQuery.ChacheKey, response, cacheOptions);
