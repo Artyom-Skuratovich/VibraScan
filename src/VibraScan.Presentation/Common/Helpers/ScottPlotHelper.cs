@@ -63,7 +63,7 @@ namespace VibraScan.Presentation.Common.Helpers
         {
             if (d is WpfPlot plot)
             {
-                EnsureMouseTrackingInitialized(plot, WpfPlotSignalMouseMove);
+                EnsureMouseTrackingInitialized(plot, WpfPlotSignalMouseMove, WpfPlotSignalMouseLeave);
 
                 plot.Plot.Clear();
 
@@ -147,6 +147,20 @@ namespace VibraScan.Presentation.Common.Helpers
 
             HidePlotToolTip(plot);
             UpdateHighlightMarker(marker, 0, 0, false, plot);
+        }
+
+        private static void WpfPlotSignalMouseLeave(object sender, MouseEventArgs e)
+        {
+            if (sender is not WpfPlot plot) return;
+
+            HidePlotToolTip(plot);
+
+            var marker = plot.Plot.GetPlottables<Marker>().FirstOrDefault();
+
+            if (marker != null)
+            {
+                UpdateHighlightMarker(marker, 0, 0, false, plot);
+            }
         }
 
         private static void ShowPlotToolTip(WpfPlot plot, Point mousePosition, string text)
@@ -343,10 +357,16 @@ namespace VibraScan.Presentation.Common.Helpers
 
         #endregion
 
-        private static void EnsureMouseTrackingInitialized(WpfPlot plot, MouseEventHandler moveHandler)
+        private static void EnsureMouseTrackingInitialized(WpfPlot plot, MouseEventHandler moveHandler, MouseEventHandler? leaveHandler = null)
         {
             plot.MouseMove -= moveHandler;
             plot.MouseMove += moveHandler;
+
+            if (leaveHandler != null)
+            {
+                plot.MouseLeave -= leaveHandler;
+                plot.MouseLeave += leaveHandler;
+            }
         }
     }
 }
