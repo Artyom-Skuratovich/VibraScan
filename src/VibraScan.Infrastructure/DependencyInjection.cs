@@ -3,11 +3,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VibraScan.Application.Common.Interfaces;
 using VibraScan.Application.DataImport;
+using VibraScan.Application.Reports.Commands;
 using VibraScan.Infrastructure.Data;
 using VibraScan.Infrastructure.Data.Bulk;
 using VibraScan.Infrastructure.DataImport.StartImport;
 using VibraScan.Infrastructure.DataImport.StartImport.Actions;
 using VibraScan.Infrastructure.Dispatching;
+using VibraScan.Infrastructure.Reports;
+using VibraScan.Infrastructure.Reports.Charts;
 
 namespace VibraScan.Infrastructure
 {
@@ -26,6 +29,10 @@ namespace VibraScan.Infrastructure
             services.AddScoped<IBulkOperations, SqlServerBulkOperations>();
 
             services.AddScoped<IDataImportService, DataImportService>();
+
+            services.AddScoped<IReportChartGenerator, ScottPlotChartGenerator>();
+
+            services.AddScoped<IReportStorageService, ExcelReportStorageService>();
 
             services.Scan(scan => scan
                 .FromAssemblyOf<ApplicationDbContext>()
